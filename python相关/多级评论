@@ -1,0 +1,475 @@
+# Django第9章: 多级评论树
+
+
+## 评论列表功能函数
+此推导方法为多级递归通用方法!
+
+```
+# 传入的参数形式要求
+comment_list = comment_list = [
+    {'id': 1, 'content': '1111', 'parent_id': None, 'children_contents':[]},
+    ...
+]
+
+# 转换成嵌套结果列表
+def transform_list(comment_list):
+    comment_dict = {}
+    for d in comment_list:
+        id = d.get('id')
+        comment_dict[id] = d
+        
+    for k in comment_dict:
+        parent_id = comment_dict[k]['parent_id']
+        if parent_id:
+            comment_dict[parent_id]['children_contents'].append(comment_dict[k])
+
+    res_list = []
+    for i in comment_dict:
+        if not comment_dict[i]['parent_id']:
+            res_list.append(comment_dict[i])
+    return res_list
+
+# 结果形式
+res_list = [{
+	'id': 8,
+	'content': '8888',
+	'parent_id': None,
+	'children_contents': []
+}, ...]
+
+```
+
+#### 推倒过程
+1. 模拟取出某文章的所有评论的部分信息如下,
+
+    ```
+    comment_list = [
+        {'id': 1, 'content': '1111', 'parent_id': None, 'children_contents': []},
+        {'id': 2, 'content': '2222', 'parent_id': None, 'children_contents': []},
+        {'id': 3, 'content': '3333', 'parent_id': 1, 'children_contents': []},
+        {'id': 4, 'content': '4444', 'parent_id': 2, 'children_contents': []},
+        {'id': 5, 'content': '5555', 'parent_id': 4, 'children_contents': []},
+        {'id': 6, 'content': '6666', 'parent_id': 3, 'children_contents': []},
+        {'id': 7, 'content': '7777', 'parent_id': 6, 'children_contents': []},
+        {'id': 8, 'content': '8888', 'parent_id': None, 'children_contents': []},
+    ]
+    ```
+
+2. 进一步构建数据结构, `{1: {'id':1, ...}, 2: {'id':2, ...},}`
+
+    ```
+    comment_dict = {}
+    
+    for d in comment_list:
+        id = d.get('id')
+        comment_dict[id] = d
+   
+    
+    
+    {1: {'id': 1, 'content': '...', 'parent_id': None, 'children_contents': []},
+    2: {'id': 2, 'content': '...', 'parent_id': None, 'children_contents': []},
+    3: {'id': 3, 'content': '...', 'parent_id': 1, 'children_contents': []},
+    4: {'id': 4, 'content': '...', 'parent_id': 1, 'children_contents': []},
+    5: {'id': 5, 'content': '...', 'parent_id': 4, 'children_contents': []},
+    6: {'id': 6, 'content': '...', 'parent_id': 3, 'children_contents': []},
+    7: {'id': 7, 'content': '...', 'parent_id': 6, 'children_contents': []},
+    8: {'id': 8, 'content': '...', 'parent_id': None, 'children_contents': []},
+    }
+    ```
+
+
+3. 若存在父评论将每个评论放进其`parent_id`对应的`children_contents`列表中
+
+    ```
+    for k in comment_dict:
+        parent_id = comment_dict[k]['parent_id']
+        if parent_id:
+            comment_dict[parent_id]['children_contents'].append(comment_dict[k])
+    
+ 
+    {1: {'id': 1, 'content': '...', 'parent_id': None, 'children_contents': 
+			[{'id': 3, 'content': '...', 'parent_id': 1, 'children_contents': [],
+			{'id': 4, 'content': '...', 'parent_id': 1, 'children_contents': []}]
+        },
+        
+    2: {'id': 2, 'content': '...', 'parent_id': None, 'children_contents': []},
+    3: {'id': 3, 'content': '...', 'parent_id': 1, 'children_contents': [
+        {'id': 6, 'content': '...', 'parent_id': 3, 'children_contents': []},
+    ]},
+    
+    4: {'id': 4, 'content': '...', 'parent_id': 1, 'children_contents': [
+        {'id': 5, 'content': '...', 'parent_id': 4, 'children_contents': []},
+        ]},
+        
+    5: {'id': 5, 'content': '...', 'parent_id': 4, 'children_contents': []},
+    6: {'id': 6, 'content': '...', 'parent_id': 3, 'children_contents': [
+        {'id': 7, 'content': '...', 'parent_id': 6, 'children_contents': []},
+    ]},
+    
+    7: {'id': 7, 'content': '...', 'parent_id': 6, 'children_contents': []},
+    8: {'id': 8, 'content': '...', 'parent_id': None, 'children_contents': []},
+    }
+    ```
+ 
+
+4. 筛选出所有的根评论, 整理成列表形式
+
+    ```
+    res_list = []
+    for i in comment_dict:
+        if not comment_dict[i]['parent_id']:
+            res_list.append(comment_dict[i])
+    
+    res_list = [
+        {
+    	'id': 1,
+    	'content': '1111',
+    	'parent_id': None,
+    	'children_contents': [{
+    		'id': 3,
+    		'content': '3333',
+    		'parent_id': 1,
+    		'children_contents': [{
+    			'id': 6,
+    			'content': '6666',
+    			'parent_id': 3,
+    			'children_contents': [{
+    				'id': 7,
+    				'content': '7777',
+    				'parent_id': 6,
+    				'children_contents': []
+    			}]
+    		}]
+    	}]
+    },
+        {
+    	'id': 2,
+    	'content': '2222',
+    	'parent_id': None,
+    	'children_contents': [{
+    		'id': 4,
+    		'content': '4444',
+    		'parent_id': 2,
+    		'children_contents': [{
+    			'id': 5,
+    			'content': '5555',
+    			'parent_id': 4,
+    			'children_contents': []
+    		}]
+    	}]
+    },
+        {
+    	'id': 8,
+    	'content': '8888',
+    	'parent_id': None,
+    	'children_contents': []
+    }]
+    ```
+
+
+6. 遍历根评论(最关键)
+
+    ```
+    ## 要实现的结构
+        根评论1 
+            子评论1
+            子评论1
+        
+        根评论2
+            子评论3
+            子评论4
+        
+        跟评论3
+            子评论5        
+            子评论6
+    
+    # 实现函数
+    def get_content(list):
+        for d in list:
+            print(d['content'])
+            if d['children_contents']:
+                # 递归,调用自身
+                get_content(d['children_contents'])
+    
+    get_content(res_list)
+    
+    # 打印的结果
+    1111
+    	3333
+    		6666
+    			7777
+    2222
+    	4444
+    		5555
+    
+    8888
+    ```
+
+
+----------
+
+
+## Ajax动态生成多级评论树
+
+```
+# 前端页面代码
+
+<div class="blog_comment">
+    <div class="comment_title">评论列表</div>
+    <hr>
+
+    <div class="list-group comment_form">
+    
+    </div>
+
+    <script>
+        # 处理评论类别函数函数,传入一系列评论根节点集合
+        function comment_tree(comment_list) {
+            var html = "";
+
+            #  循环遍历根节点,内部参数为 索引 和 值
+            $.each(comment_list, function (k, v) {
+                # 准备组合一个评论节点
+                var comment_item = '<div class="comment_item">';
+
+                # 构建评论内容
+                var temp = "<div class='content'>
+                <span>{0}{1}</span></div>".format(
+                v['nid'], v['content']);
+
+                comment_item += temp;
+
+                # 判断内部是否有子评论,有子评论则取出来, 整合成<div class='content'>
+                if (v['children_contents']){
+                    // 最关键的一步
+                    comment_item += comment_tree(v['children_contents'])
+                }
+                # 最后闭合这个comment_item节点
+                comment_item += "</div>";
+
+                html += comment_item
+            });
+
+            return html
+        }
+
+        # 加载完毕触发ajax事件,再次向server发送请求, 接受处理好的评论列表
+        $(function () {
+            alert(1);
+            $.ajax({
+                url: "",
+                type: 'GET',
+                success: function (data) {
+
+                    # 将data从string解析成原来的列表结构
+                    var my_comment_list = JSON.parse(data);
+                    # ajax接收后端传入的评论列表
+                    s = comment_tree(my_comment_list);
+                    $('.comment_form').append(s)
+                }
+            })
+        });
+
+    </script>
+
+</div>
+```
+
+
+## 自定义标签生成多级评论树
+
+```
+# urls.py========================================
+url(r'^p/(\d{1,5})/', views.article_detail_page, name='article'),
+
+
+# views.py======================================
+def article_detail_page(request, pk):
+    article = Article.objects.filter(nid=int(pk)).first()
+    if not article:
+        return HttpResponse('<h1>资源页面不存在</h1>')
+
+    return render(request, 'article_detail_2.html', {
+        'pk': pk,
+        'article': article,
+    })
+
+
+# 前端页面======================================
+# 其余的地方不变
+{% user_comment request pk %}
+
+ 
+# my_tags.py=====================================
+from my_blog.models import Article
+from django.shortcuts import HttpResponse, render, redirect
+from ..utils import transform_list
+
+# 以下流程直接参考权限项目的菜单生成
+
+# 根据文章id获取文章评论,且进行处理
+def process_menu_data(pk):
+    article = Article.objects.filter(nid=int(pk)).first()
+    if not article:
+        return HttpResponse("<h1>资源不存在!</h1>")
+    comment_list = list(article.comment_set.all().values('nid', 'content', 'user_id', 'parent_id_id'))
+    comment_list = transform_list(comment_list)
+    return comment_list
+
+# 根据信息列表生成评论标签字符串
+def produce_html(comment_list):
+    html = ''
+    tpl1 = """
+               <div class="comment_item">
+                   <div class="comment-header">{0}{1}</div>
+                   <div class="comment-body">{2}</div>
+               </div>
+           """
+    for item in comment_list:
+        if item['children_contents']:
+            html += tpl1.format(item['user_id'], item['content'].strip(),
+                                produce_html(item["children_contents"]))
+        else:
+            html += tpl1.format(item['user_id'], item['content'].strip(), '')
+    return html
+
+
+from django.utils import safestring
+
+#  自定义标签, 直接在模板中渲染出评论列表
+@register.simple_tag
+def user_comment(pk):
+    data = process_menu_data(pk)
+    html = safestring.mark_safe(produce_html(data))
+    return html
+```
+
+
+## ajax实现评论
+
+```
+# 标签
+<div id="add-form" class="comment_con"><span class="comment_title">提交评论</span>
+    <textarea id="comment_input" cols="30" rows="10" >
+    </textarea>
+    
+    <p>
+       <input type="button" value="submit" id="comment_submit_btn" class="btn btn-success">
+    </p>
+</div>
+
+
+<script>
+var parent_comment_id = "";  // 设置全局变量,当点击回复按钮则赋值为点击的评论的id;
+var father_comment_username = ''; // 设置父级标签的全局变量,同样是点击回复按钮则设置对应的值;
+var father_comment_content = '';
+
+// 回复评论事件
+$('.comment_list').on('click', '.reply_btn', function () {
+    # 1.取出该条评论的id值,即为class属性值, 定位到父级标签后,就可以取出父级评论的内容;
+    parent_comment_id = $(this).next().attr('class');
+
+    # 2.点击回复按钮, 则设置father_comment_username的值;
+    father_comment_username = $(this).siblings().eq(0).text();
+
+    # 3.给文本框添加回复的用户名内容, 仅用于在前端显示, 注意此处使用text()赋值会出现问题;
+    $('#comment_input').val('@'+father_comment_username+'\n');
+    
+    # 取出该评论的内容供后面使用
+    father_comment_content = $(this).siblings().eq(4).children().eq(1).text();});
+
+    # 文章点赞;
+    $('#favor_btn').click(function () {
+        {% if request.user.is_authenticated %}
+             $.ajax({
+            url:'/blog/favor/',
+            type: 'post',
+            data: {'article_id':{{ article.nid }},
+                   'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val()},
+            success: function (data) {
+                if(data.status=='success'){
+                    $('#article_num').text(data.poll_num)
+                }
+            }});
+        {% else %}
+            window.location.href='/login?path='+$('#request_path').val();
+        {% endif %}});
+
+
+# 增加文章评论
+  $("#comment_submit_btn").click(function () {
+      // 1. 取出换行符 \n 的索引位置
+      var index=$("#comment_input").val().indexOf("\n");
+
+      // 2. 取出真正的文本内容,字符串切片,js语法,从第二行开始,切片所有的内容
+      var comment_content=$("#comment_input").val().substr(index+1);
+      alert(comment_content);
+
+      {% if request.user.is_authenticated %}
+        $.ajax({
+           url:"/blog/comment/",
+           type:"post",
+           data:{"csrfmiddlewaretoken":$("[name='csrfmiddlewaretoken']").val(),
+                 "article_id":{{ article.nid }},
+                 "comment_content":comment_content,
+                 "parent_comment_id":parent_comment_id
+           },
+           success:function (data) {
+                // 判断是否是通过回复按钮来添加评论的,注意必须在最后清空father_comment_username这个变量
+               var temp=father_comment_username;
+               s='<li class="list-group-item comment_item"><a href="">{0}</a><a href="">{1}</a><a href="" class="pull-right">&nbsp;支持</a><a href="#comment_content" class="pull-right reply_btn">回复</a><span class="{2}"></span> <div> <span>{3}</span> <p>{4}</p></div> </li>';
+               if (temp){father_comment_username="<a>@</a>"+temp}
+
+               // js中利用字符串拼接
+               s=s.format('{{ request.user.username }}',
+                        data.comment_createTime,
+                        parent_comment_id,
+                        father_comment_username,
+                        comment_content);
+
+               $(".comment_list").append(s);
+               $("#comment_input").val("");
+
+               // 关键点, 每次走完此处必须对全局变量清零
+               father_comment_username="";
+               parent_comment_id=0;
+               father_comment_content=''
+        }
+   });
+
+      {% else %}
+       location.href="/login?path={{ request.path }}";
+      {% endif %}
+  });
+
+</script>
+
+
+// views.py
+def user_comment(request):
+    """方法1, 直接在前端操作评论内容"""
+    user_id = request.user.nid
+    article_id = request.POST.get("article_id")
+    comment_content = request.POST.get("comment_content").strip()
+    # 若评论内容为空,则不添加任何信息
+    if not comment_content:
+        return HttpResponse('noy ok')
+
+    # 1. 查看是否是通过回复(有父评论)发送还是直接评论发送
+    if request.POST.get("parent_comment_id"):
+        # 2. 获取该评论的父级评论id并保存记录
+        c = int(request.POST.get("parent_comment_id"))
+        comment_obj = Comment.objects.create(article_id=article_id, content=comment_content, user_id=user_id,
+                                             parent_id_id=c)
+    else:
+        comment_obj = Comment.objects.create(article_id=article_id, content=comment_content, user_id=user_id)
+
+    from django.db.models import F
+    # 3. 对评论数量自加操作
+    Article.objects.filter(nid=article_id).update(comment_num=F("comment_num") + 1)
+
+    # 只传输创建时间过去
+    response_ajax = {"comment_createTime": str(comment_obj.create_time)[:16], }  # 很关键,不去毫秒!
+    return HttpResponse(json.dumps(response_ajax), content_type='application/json')
+```
+

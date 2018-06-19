@@ -1,0 +1,177 @@
+
+WEB是无状态请求, 服务器不能直接识别用户;
+
+怎么才能识别客户端?
+		
+	
+
+
+COOKIE
+	缓存在本地;
+	每次请求携带COOKIE信息:{SESSION_ID: 'ABC'}
+		
+
+SESSION
+	客户信息缓存,即为SESSION表:
+		SESSION_KEY = 'ABC'
+		SESSION_DATA = HASH({'DATA1', 'K2':'DATA2', ...})
+		
+	保存在服务器;	
+
+	流程:
+		1. 有客户端首次请求,未携带cookie信息,django会给客户端返回
+			cookie键值对{session_id:'随机字符串'},作为客户端浏览器标识;
+		
+		2. 用户登录(
+			authenticate(username='', password='')  # 检验取出用户对象, 
+			login(request, user)  # 登录,生成session记录
+		
+		3. 下次此客户端再访问server则根据携带的cookie从session中取出对应的用户信息;
+			也就是本地浏览器在session的有效期内再次访问服务器,无需登录,可以直接访问授权的页面;
+			
+				具体用户的状态信息怎么保存在session_data中,暂时不深究!
+		
+			
+	session方法:
+		def my_login_1(request):
+			if request.method == "GET":
+				return render(request, 'login.html')
+			username = request.POST.get('username')
+			pwd = request.POST.get('password')
+			print(username, pwd)
+
+			if not username or not pwd:
+				error={'msg':'用户名或密码不能为空'}
+				return render(request, 'login.html',{'error':error})
+
+			# 取出用户对象: auth.authenticate(username, password)
+			user = UserProfile.objects.filter(username=str(username).strip(),password=str(pwd).strip())
+			
+			if user:
+				
+				# 设置session_data信息:auth.login(request,user)
+				
+				user=user.first()
+				request.session['is_login']=True
+				request.session['user']=user.username
+				return render(request, 'index.html')
+
+			error = {'msg': '用户名或密码输入有误'}
+			return render(request, 'login.html', {'error': error})
+		
+	
+	
+3. 访问权限页面
+	原生态:
+		if request.session.get('is_login')=='True':
+			>>> /index/
+		else:
+			>>> /login/
+		
+	auth模块:
+		# 若用户已登录,即session都对应的信息,则直接显示index页面信息,否则跳转至登录页面;
+		@login_required
+		def index(request):
+			return render(request, 'index.html')	
+	
+		在setting.py中指定登录路径
+			LOGIN_URL= '/login/'
+		
+
+auth模块使用:
+	from django.contrib.auth.decorators import login_required
+	
+	# 检查用户输入的用户名和密码是否验证通过,即在数据库中找打匹配的user并返回;
+		from django.contrib import auth, login, logout, authenticate
+		user = authenticate(username='', password='')
+	
+	# 在session表中创建或更新session_data信息,	
+		login(request, user)
+	
+	
+	# 删除session表中的记录
+		logout(request)
+	
+	
+	# 检查密码是否符合
+	
+		from django.contrib.auth.hashers import make_password
+		user = UserProfile.objects.filter(...)
+		user.password = make_password(pwd)
+		user.save()
+		
+
+	
+		
+	# 重置密码
+		# 1. 先检查输入密码是否与数据库中的密码一致
+		request.user.check_password(old_pwd)
+		# 2. 设置新密码
+		request.user.set_password(new_pwd)
+		# 3. 保存密码
+		request.user.save()
+	
+	
+	# ajax实现用户登录
+		
+		# 直接对form进行序列化,
+		data: $('.post_form').serialize(),	
+		还有使用formdata或者直接构造data键值对(注意构建csrf键值对)
+
+	
+
+关于错误信息显示:
+	ajax登录,直接生成{'error_dict':{..}, 'status':'success/fail'}并运用json.dumps
+	
+
+
+
+
+
+
+	
+
+	
+		
+	
+		
+	
+	
+			
+
+
+
+
+	
+		
+			
+		
+		
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+
+
+

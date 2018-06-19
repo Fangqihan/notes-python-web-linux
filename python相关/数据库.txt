@@ -1,0 +1,718 @@
+什么数据库?
+	保存数据的管理软件
+
+	分类:
+		1关系型数据库: 
+			有表结构(字段名称);
+			代表: myslql, sqlite, oracle...
+					
+		非关系型数据库	
+			没有表结构;
+			代表: mongdb...
+		
+		最长用的数据库mysql:
+			
+			下载;
+			安装;
+			配置;
+			修改密码;
+		
+		编码:
+			库,表和字段都可以设置编码,必须注意
+			
+			
+		一. 库操作:
+			登录mysql数据库管理软件:
+				mysql -uroot -p*****;
+			
+			查看所有数据库:
+				show databases;
+			
+			选择数据库:
+				use db_name;
+			
+			查看数据库:
+				show create database db;
+				
+			新增数据库: 
+				create database db_name charset utf8;
+				# 注意,必须加上编码
+				
+			删除数据库: 
+				drop database db_name;
+			
+			修改数据库编码: # 只能修改编码
+				alter database db_name charset gbk;
+		
+			
+			备份:
+				物理备份:
+					直接复制数据库文件;
+					利用mysqldump备份至指定的路径下:
+						单个数据库
+							备份:
+								myslqdump -uroot -p****** db_name > 路径/db_name.sql
+							
+							恢复:
+								mysql -uroot -p****** db_name < 路径/db_name.sql
+								# 保证数据库中存在数据库db_name
+								
+						多个数据库
+							备份:
+								mysqldump -uroot -p****** --databases db1 db2 > 路径/db1_db2.sql
+							恢复:
+								mysql -uroot -p****** < 路径/db1_db2.sql
+	
+		
+		
+		二. 表相关:
+			数据引擎
+				类似于文件格式有txt,pdf等格式，表也有相应的存储格式；
+				
+				类型：
+					innoDb
+						默认存储方式；
+						支持行锁设计，外键；
+						支持事务；
+						存储到硬盘；
+						
+					myisam
+						不支持锁和外键以及事务；
+						存储到硬盘；
+						
+					memory
+						存储在内存中，断电就丢失；
+												
+			
+			常用操作:				
+				新增表:
+					create table t_name(
+						id int,
+						name char(32),
+						age int
+						);
+			
+				删除表:
+					drop table t_name;
+			
+				修改表字段:
+				
+					修改字段类型
+						alter table t_name 
+							modify name char(16);
+				
+					修改整个字段名称(名称和类型都必须带上)
+						alter table t_name
+							change name NAME char(32);
+			
+					增加约束条件/移除
+						alter table t1 
+							modify id primary key auto_increment;
+					
+					移除primary key:
+						alter table t1
+							drop primary key;
+							#　若报错，则移除其他可能有影响的约束即可
+					
+					
+					删除字段：
+						alter table t1
+							drop filed_name;
+						
+					
+				 查看表结构:
+				 	desc t_name;
+				 	
+				 	show create table t_name;
+				
+				
+				复制表：
+					# 将表t1的字段和记录复制到表t3					
+					create table t3
+						select * from t1;
+					
+					# 仅仅复制表结构,不复制表记录
+					create table t3
+						select * from t1　where 1=2;
+					
+					create table t5 like t1;
+			
+			
+			字段类型：
+				整形
+					
+					正负指定:
+						默认为有符号整数;
+						在整数类型后面指定unsigned将其变为无符号整数;
+						
+						create table t1(
+							id int primary key auto_increment,
+							name char(32);
+							age tinyint unsigned
+							);
+
+										
+					有正负之分;
+					大小		类型			范围(正负)	范围(正数)	
+							
+					1byte 	tinyint		-128~127	0-255
+					
+					2bytes	smallint	...			0-65536-1		
+					
+					4bytes	int			...			0-4294967296-1
+					
+					8bytes	bigint		...			0-2**64-1
+					
+				
+				浮点型:
+					
+					float
+						最大位数是255,最大支持的小数位数为30位数;
+						
+					double
+						同float类型;
+						
+					decimal
+						相对于另外两种数据类型更为精确;
+						内部以字符串形式存储;
+						最大位数为65位数;
+						支持最大小数点后30位数;
+						
+						
+					大小		类型			范围(正负)	范围(正数)		
+					4bytes	float		...			...
+					
+					
+				字符串;
+					
+					char(len)
+						执行长度
+						简单粗暴,浪费空间;
+						存取速度快;
+						
+					varchar
+						可变长度;
+						节省空间;
+						存取速度相对与char较慢;(可以理解为存储了长度 和 字符串)
+						
+				
+				日期类型
+					year
+						年份;	
+						一般保存为4位数;
+						输入时候最好为4位数:
+							若输入两位数注意:
+								<=69,例如50,存储为2050;
+								>=80,例如80 存储为1980;
+							
+						creat table t1(
+							id int,
+							born_year, year
+							);
+								
+						
+					date
+						2018-1-1
+						
+						insert into t1(time now())   #  now()会自动获取系统的时间
+			
+					time
+						16:17:212			
+					
+					datetime
+						2018-1-1 16:17:212
+						
+					
+				枚举类型
+					单选;
+					create table t1(
+						id int,
+						gender enum('male','female')
+						);
+				
+							
+				集合类型
+					多选;
+					create table t1(
+						id int,
+						hobby set('reading','music','sport')
+						);
+					
+					赋值时候若有多个项目以逗号隔开:		
+					insert into table t1 values
+						(1,'reading, music');	
+				
+				
+			字段完整性约束:
+				not null
+					不为空,若没有指定,default=Null
+				
+				
+				unique
+					单列值唯一
+						name char(32) not null unique	# 设置后姓名不为空且不能重复
+				
+					多列唯一
+					create table t1(
+						id int,
+						ip char(32),
+						port char(32),
+						unique(ip,port)
+						);	
+						
+				
+				primary key
+					主键;
+					不为空且唯一,等价于 not null unique;
+					一般为单列主键,也可以设置多列主键,同unique;
+
+			
+				auto_increment
+					别约束的字段必须同时被key约束;						 
+					自增;
+					一般对id进行设置;
+					使用delete方法删除后再插入记录,该字段仍然按照删除前的自动增长;
+						 
+				
+				foreign key
+					外键;
+					当前表通过某个字段与另外一张表形成对应关系;
+					
+						# 部门信息表
+							create table dept(
+								id int primary key auto_increment,
+								name char(32)
+								);
+								
+						# 员工信息表	
+							create table t1(
+								id int primary key auto_increment,
+								name char(32),
+								dept int,
+								constraint fk_name foregin key(dept) references dept(id)
+								on delete cascade
+								on update cascade
+								);
+						
+						
+					新增外键:
+						 alter table emp
+						 	add constraint foreign key(dept_id) 
+					 		references dept(id)
+					 		on delete cascade
+					 		on update cascade;
+						
+					
+					删除外键:
+						没有好的办法,需要外键名称,也就是说在创建外键的时候要指定名称
+						alter table emp
+							drop constraint fk_name;  #　有问题！
+					
+						
+			
+				
+	三. 表记录操作：
+		
+		增加记录:
+			insert into t1(name,age) values
+				('alex',29);
+		
+		删除记录:
+			删除某一条记录:
+				delete from t1 where id=1;
+			
+			删除所有记录:
+				truancate t1;			
+		
+		修改记录:
+			修改某行记录的某一个字段值;
+			update t1 set name='bob' where name='alex';
+		
+	
+	四. 表之间关系
+		
+		举例:
+			# 作者
+				id	name
+				1	a1
+				2	a2
+			
+			# 出版社
+				id	name
+				1	p1
+				2	p2			
+						
+			# 书
+				id	name	author	publisher
+				1	b1		a1		p1
+				1	b1		a2		p1
+	
+		一对一:
+			一对一;
+			
+			
+		一对多:
+			出版社 和 书的关系;
+			一个出版社	>>>	很多书
+			一本书		>>> 一个出版社
+			直接利用foreign key外键;
+			
+		多对多:
+			书 和 作者的关系;
+			一本书  	>>> 很多作者
+			一个作者 	>>>	很多书
+			第三张表
+			
+			# book2author
+			id		book	author
+			1		1		2
+			1		1		1
+			1		2		1
+		
+		
+
+
+数据查询(重点内容):
+	建数据库的目的是保存数据和随时查询数据,且查询数据占大部分;
+	
+	最基本语法: select * from t_name;
+	
+	条件:
+		group by:
+			分组;		
+			以字段作为分组,若没有指定的,默认每条记录为一组或者理解为以id为一组;
+			以某一字段分组必须要select中出现:
+				select dept_id,count(*) from emp group by dept_id;	
+			
+			聚合函数:
+				对组内字段进行相关的统计;
+				
+				count(*): 
+				
+				
+				max(field_name)
+					
+					
+				min(field_name)
+				
+				
+				avg(field_name)
+			
+			
+				sum()
+				
+
+		having:
+			过滤;
+			与group by成对出现;
+			
+
+		where:
+			条件判断;
+			
+			判断方式:
+				=:
+					绝对匹配;
+					
+					
+				like:
+					模糊匹配;
+					%: 通配符,可以代表多位;
+					_: 只能代表一位;
+					
+					
+				regex:
+					正则匹配,模糊匹配;
+					语法同正则表达式;
+					select * from emp where name regexp '^a.*'	# name以a开头
+					
+						
+		
+		order by
+			排序;
+			默认升序排列;
+			升序:asc
+			降序:desc
+			
+		
+		distinct:
+			去掉重复;
+			去掉与当前字段相同的其他字段;
+			
+			
+		limit
+			限定显示的记录条数;
+			
+		
+	
+	多表查询:
+		连表查询:
+			inner join
+				内连接,只显示共有部分;
+				利用on关键字连接两个表;
+				
+				
+			left join
+				以左侧表优先;
+				没有找到与左侧表对应的字段以NULL代替;
+				
+				
+			right join
+				以右侧表优先;
+				同理;
+				
+		
+		子查询:
+			将一个查询结果放进另外一个查询语句的查询条件中;
+			
+			关键字:
+				in	
+				not in	
+				exists	
+				not exists	
+				
+			运算符:
+				>
+				<
+				=
+				!=				
+				
+			
+			例如:
+				# 员工部门表
+				id 	name	age	 dept_id
+				
+				# 部门信息表
+				id	name
+			
+				练习: 查询年龄在 平均年龄在25岁以上的 部门;
+				
+				select id,name from dept where id in 
+					(select dept_id from emp group by dept_id having avg(age)>25); 
+				
+
+数据库作用?
+	保存数据:
+		描述事物特征的字符,可以是int,float,str
+		数据类型:
+	
+	方便用户对数据进行增删该查;
+	有自己的语言:sql语言;
+
+
+
+pymysql模块
+	可以在python代码中使用sql语句实现:
+		1. 连接数据库对数据库;
+			conn = pymysql.connect(host='localhost',user='root',
+									password='***',db='',charset='utf8')
+			curser = conn.curser()
+									
+			
+		2. 增删改查等操作;
+			rows = curser.execute(sql语句)  # 返回受影响的表记录条数
+			
+			curser.close()
+			conn.close()
+	
+	是框架ORM实现的基础;
+	
+	弊端:
+		在sql语句中, --后的内容为注释,利用这个可以实现无密码登录或无须用户名直接登录;
+		
+	解决办法:
+		sql = 'select * from user WHERE username=%s and password=%s;'
+		rows = cursor.execute(sql, [user, pwd])
+	
+	
+	在执行插入语句 后需要执行 conn.commit()才能生效;
+	
+	取出结果:
+		ret = cursor.fetchone()  	# 取出一行记录
+		
+		rets = cursor.fetchall()	# 取出所有记录,以元祖为结果,每一行结果以是以元祖形式;
+ 	
+
+				
+内置功能:
+	
+	视图view:
+		利用sql语句可以在内存中创建虚拟表;
+		例如给连表命令,以后调用直接使用名称即可;
+		语法: 
+			创建视图:
+				create view view_name as sql语句;
+	
+			修改视图:
+				alter view view_name as sql语句;
+				# 直接修改视图内容
+			
+			删除视图:
+				drop view view_name;
+			
+		
+		可以对视图内容进行修改,但是原表格也会跟着修改;
+		注意:一般视图主要是用来查询使用,尽量不做任何修改;
+		
+	
+	
+	触发器:
+		对数据库的插入,删除和修改等动作会触发一些动作,触发器就是定义这个动作的;
+		
+		设置触发器:
+			实例:
+			# 对表dept进行任何insert操作后会执行 内部定义的sql语句;
+			
+delimiter //  # 声明以//为结束符号
+CREATE TRIGGER t1_triger AFTER INSERT ON dept FOR EACH ROW
+BEGIN
+	insert into t1(id,name) values (1, 'alex');
+END//  # 结束
+delimiter ;  # 修改结束符
+
+				
+		触发:
+			对表进行插入,删除和修改等操作会触发预先定义好的触发器;
+		
+		
+		删除触发器:
+			drop trigger dept_after_tri;
+		
+		
+	
+	
+	存储过程:
+		类似与函数,直接封装一堆sql语句,直接调用名称即可执行内部语句;
+		
+		设置实例:
+
+# 设置存储过程
+delimiter //
+
+create procedure p(
+	# 先定义参数,若没有参数,则为空
+    in n1 int,	#  传入的参数
+    out res int  # 返回的值
+)
+
+BEGIN
+    select * from dept where id > n1;
+    set res = 11;
+END //
+delimiter ;			
+
+		调用:
+			在mysql中:
+				set @res=0;         # 初始值
+				call p5(3,@res);    # 调用
+				select @res;        # 取出返回值  
+				
+			在pymysql模块中:
+				cursor.callproc(p, args)  									
+				cursor.execute('select @_p5_1;')
+				print(cursor.fetchone())
+		
+		删除存储过程:
+			drop procedure p;
+			
+	
+		
+	事务:
+		作用: 回滚到没有进行任何操作之前的状态;
+		
+		#  声明开始
+		start transaction;
+		
+		sql语句对表进行增删改等操作...
+		rollback;  	# 中途若出现错误或者失误,直接返回初始状态
+		commit;		# 提交, 之后就不能回滚了
+	
+	
+	函数:
+		mysql中提供了许多内置函数;
+		聚合函数也是其中一种;
+		大部分都是对str进行操作:
+			例如: select upper(str);
+			
+		
+	流程控制:
+		在存储过程中使用流程控制;
+		
+delimiter //
+CREATE PROCEDURE proc_if ()
+BEGIN
+
+    declare i int default 0;
+    if i = 1 THEN
+        SELECT 1;
+        
+    ELSEIF i = 2 THEN
+        SELECT 2;
+        
+    ELSE
+        SELECT 7;
+        
+    END IF;
+
+END //
+delimiter ;
+		
+
+	索引:
+		作用: 针对精确查询提升查询速度;
+		没有索引: 一般查询都是遵循逐行遍历,若数据量大的情况下,就会比较费时,查询效率低;
+		有索引: 类似与二分法查询,可以迅速缩小范围;
+		
+	
+	磁盘读取内容:
+		时间:
+			寻道:
+				磁臂移动到目标磁道;
+				一般时间小于5ms;
+				
+			旋转:
+				7200转/min
+				120转/s
+				1转/(1/120)
+				延迟是1/120/2s
+				
+			传输:
+				可以忽略计;
+		
+		这三个时间之和为读取延迟时间,虽然很短,但是相对于计算机而言,却是相当长的,
+		考虑到磁盘IO操作是非常高昂的,所以一般读取时候,会目标数据相邻的数据也读取到内存;
+				
+	
+	b+树
+		根部磁盘块保存真正的内容;
+		树叉的磁盘块是保存的是指向根磁盘的索引,即保存的是地址;
+		
+		每一层就表示一次io操作,所以要尽可能保证层级越低越好!
+		
+
+
+	索引种类:
+		
+		index
+			普通索引,只是加速查找;
+		
+		
+		primary key
+			联合(field1, field2)
+			唯一(field)
+		
+		
+		unique
+			联合
+			唯一
+		
+		
+	索引选择:
+		1. 字段区分度高的优先;
+		2. 字段明确优先;
+		
+		
+		
+				
+				
+				

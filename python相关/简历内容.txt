@@ -1,0 +1,72 @@
+１．熟练掌握python语言开发,
+	面向对象		
+	socket 网络编程
+	多线程
+	多进程
+	协程
+	异步IO
+	IO多路复用如 select，poll，epoll 的原理及使用
+	Django mvc,
+	form 自定制，
+	middleware，
+	orm
+	其他框架:tornado，bottle， flask 的应用
+
+
+２．熟练掌握web开发知识，除了熟悉
+	原生js
+	css
+	html
+	bootstrap
+	jquery
+	ajax
+	csrf
+	jsonp跨域
+	模态对话框
+	轮播图	
+	瀑布流
+	异步文件上传和下载
+
+３．熟练掌握
+	关联查询
+	索引
+	存储过程
+	事务操作
+	MySQL 的基本优化知识
+	缓存redis
+	memcache
+	队列rabbitMQ
+	分布式任务队列 celery 的常用操作
+
+
+４．掌握常用算法
+	冒泡
+	二分
+	快速排列
+	二叉树 *
+	希尔
+	堆排序 *
+	归并排序 *
+	简单工程
+
+
+５．熟悉协作开发工具git的应用；
+
+
+６．熟悉linux系统
+	常用命令
+	服务
+	能在linux系统下从事程序开发。
+
+
+7.简单爬虫开发
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+virtualenv作用
+	将内置的python编译环境拷贝一份;
+	
+	且与之隔离;
+		安装pack包不会影响系统的python编译环境;
+	
+	
+	
+	
+
+
+window环境下安装步骤
+	# 安装虚拟环境
+	pip install virtualenv 
+
+	# 创建虚拟环境env
+	virtualenv ENV
+
+	# 启动虚拟环境 
+	cd env/script/activate
+
+	# 退出虚拟环境
+	deactivate
+
+
+	
+(推荐)利用pycharm创建virtualenv
+	操作方便,省去很多步骤;
+	
+	1. 一般从远程下载项目到本地(使用git);
+	
+	2. 使用pycharm打开项目;
+	
+	3. 利用pycharm创建虚拟环境,并安装对应的pack包,一般在requirements.txt中;
+			
+		pip list 
+			# 查看当前项目的安装的packages;
+		
+		env1/bin/pip freeze > requirements.txt
+			# 将安装包放进requirements.txt中
+			
+		
+		env2/bin/pip install -r requirements.txt
+			# 读取并安装文件中的模块
+
+
+	
+
+
+		
+		
+				
+
+
+
+
+
+
+
+
+
+
+
+

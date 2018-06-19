@@ -1,0 +1,391 @@
+什么是html?
+	hypertext markup languange 超文本标记语言;
+	可被浏览器识别的一套规则;
+	浏览器按照标记符号来解释并显示内容;
+	
+	标签分类:
+		1. 按照标签占的行分类
+			行内标签
+				按内容来扩展宽度
+				代表: <span>,<a>,<img>
+		
+			块级标签
+				独占一行;
+				可以设置宽高;
+				代表: <div>, <p>, <h1>
+				
+		2. 按照标签闭合方式
+			单标签,自闭和标签:
+				<input>		# 表单输入框
+				<hr>		# 换行线
+				<br>		# 空行
+			
+			双标签:
+				<div></div>
+				<a></a>
+	
+	 常用标签:
+		<table>
+			表格标签;
+			样式: border, width,cellpadding)
+		 	<tr>	# 行
+		 	<td>	# 列,普通列
+		 	<th>	# 标题列	 	
+			
+		form表单:
+			input标签
+				name属性:
+					 在像后台提交数据时候需要设置,便于后台接收数据;
+			
+				id属性:
+					主要在浏览器中使用,用于css和js;
+			
+				value:
+					显示值/默认值/	
+				
+				type属性:
+			
+					输入类型:
+						text			# 文本
+						password		# 密码
+						file			# 文件
+							在django传递后台接收后是放在FILES缓存件中,
+							POST中只存放文件名称,获取其他的input输入的内容;
+							
+						checkbox		# 多选框
+						radio			# 单选框			
+						submit			# 提交
+						reset			# 重置,清空输入内容
+				
+					
+				
+						
+			 select下拉框:
+			 	<select name="cars">
+					<option value="volvo" selected>Volvo</option>
+					<option value="saab">Saab</option>
+					<option value="fiat">Fiat</option>
+					<option value="audi">Audi</option>
+				</select>
+			
+			button按钮:
+				需要结合dom事件绑定使用;
+					
+			文本区域输入:		
+				<textarea cols='5' rows='5'>	
+
+	
+	
+
+
+
+什么是css?
+	层叠样式表,cascading style sheet;
+		层叠: 同一个标签可以存在样式;
+	对html进行 渲染 和 布局;	
+	将内容与样式进行分离;
+	
+	
+	引入:
+		行内式: style = "..."
+		内嵌式: <style>定位器{...}</style>
+		引入式: <link rel=stylesheet href='main.css'>
+	
+	
+	加载以及使用优先级:
+		按顺序加载;
+		定位标签和样式相同的话,权重越大,越优先使用;
+			!important > 内联样式 > id选择器 > 类选择器 > 元素选择器
+		选择器权重相同的话,采用后者样式;
+	
+	
+	规则:
+		选择器
+			若可以自定义属性,那么是否可以通过自定义属性来定位标签呢?
+			
+			
+			class >>>  .class_name{}
+				返回一组标签列表;
+				
+
+			id 	>>>  #ID{}
+				返回一个标签;
+				
+				
+			标签名 >>>  标签名{}
+				返回一组标签列表
+			
+				
+			组合/导航查询:
+				下面例子中div和p标签是象征性:
+					目标标签为p标签,div标签只是模糊范围;
+				
+					div   p{...}		
+						# 定位div标签所有后代中的p标签
+					
+					div > p{...}		
+						# 只在div的子标签中查找p标签
+					
+					div + p{}		
+						# 若下一个兄弟标签为p则显示样式
+					
+					div ~ p{}		
+						# 在div后面兄弟标签找出素有的p标签
+					
+					div, p{}
+						# div或者p都拥有此样式;
+				
+				
+			伪类选择器:
+				通过标签名定位标签且显示样式:
+					触发样式主要是 点击前后,悬浮,点击瞬间或者文本框聚焦等事件;
+				a:link{}		# a标签被点击前显示
+				a:visited{}		# a标签被点击后显示
+				a:hover{}		# 悬浮a标签上显示
+				a:active{}		# 点击a标签瞬间显示
+				button:active{}	# 点击按钮瞬间样式显示
+				input:focus{}	# 输入框开始输入内容后所显示样式
+				
+			
+		属性:
+			
+			文字相关:			
+				字体属性
+					font-size:
+					font-weight:
+					font-famlily:
+					text-align: left
+
+				
+				文字显示:
+				
+					单一指定:
+						line-height:
+							指定文本显示的行的行高;
+							若没有指定height,那么行高也为当前的height;
+							若行高足够显示整个文本,那么文本会在垂直方向的中线上;
+							line-height越小,文本向上移动,当为0时,直接对其上一行的基线;
+			
+						height:
+							设定块标签的高度;
+							当前标签对文本显示没有任何影响,但是若设置过小,文本会溢出当前标签框,那么溢出的文本可能会直接被
+							随后的标签框提覆盖,造成无法显示;	
+					
+					都没有指定:
+						当前标签框体会自动根据文字大小来自适应进行调整;
+					
+					都指定:
+						标签会按照height的高度来显示;
+						文本会按照line-height的高度来上下浮动显示;
+						height的变化不会影响文本的位置;
+						line-height的变化会影响文本显示;
+						只有当行高与height相等且height足够显示文本,文本才会垂直居中显示;
+
+			
+				行属性
+					顶线			
+					中线		
+					基线		
+					底线			
+					行高		上下行顶线之间的距离;
+					行间距	上行底线和下行顶线之间的垂直距离;
+				
+					图片和文字对齐:
+						verticle-align: middle;	
+
+	
+			background属性:
+				 主要是设置背景图片问题:
+				 	background-image: url("...");
+				 	background-repeat: no-repeat/ repeat-x/ repeat-y;
+					backgorund-position-x: 100px; 	# 调整距离左边框位置
+					backgorund-position-y: 100px;	# 调整距离上边框的位置
+					background-attachment: fixed;	# 固定背景图片,不会随着滚动而移动
+				
+				背景图片显示不同于文字,只有当指定height>0才会显示;
+				而且会表现空间内的垂直和水平方向上无线repeat;
+				
+				
+			
+		盒子模型:
+			所有标签都可以认为是一个盒子;
+			
+			四边界:
+				content
+					内容区
+					
+				padding
+					内容区到盒子内边框的距离;
+					内部填充;
+				
+				border
+					边框
+				
+				margin
+					外部填充
+				
+				单位:px
+			
+			
+			文档流:
+				标签是按照从左至右,从上到下的流式排列;
+				盒子若移动,随后的盒子都会有所变化;
+				
+				
+			半脱离文档流:
+				类似与文档流,只不过盒子移动,随后的盒子没有变化,当前盒子移动相对与自身原来的位置移动;
+				position: relative;
+			
+			脱离文档流:
+				若标签脱离文档流,那么下一个标签盒子定位时就当此标签盒子不存在来定位;
+				
+			
+				float浮动:
+					若上一个标签浮动,则视为脱离文档流,则后续的标签直接当做它不存在,直接顶上去;
+					当前标签自身提升显示层级;
+					
+					不仅仅有浮动作用,而且还可以将行内标签变得可以设置宽度和高度,
+						作用类似dispaly:inline-block,但是此设置有个弊端,盒子之间会存在间隙,
+						虽然可以通过margin-left进行调整,但是比较繁琐,没有float好用;
+						
+					left: 
+						行内左对齐;
+				
+					right: 
+						行内右对齐;
+				
+					作用使得块级标签能够在一行实现;
+
+					若一行内不能显示,则标签换行;
+						若前面的标签之间有高度差,那么在换行过程中可能三个标签会被阻塞在第二个标签下面;
+						
+				
+					文本溢出:
+						不会自动换行;
+						overflow
+							auto	# 默认,添加滚动条
+							hidden	# 隐藏多余的文本
+							scroll	# 添加滚动条
+				
+					清楚浮动:
+						clear: left		# 按正常形式加载时,若左侧标签是浮动的,则另起一行加载
+						both			# 若左侧或右侧标签是浮动,则另起一行加载
+					
+				
+				absolute:
+					position:absolute;
+					直接脱离文档流;
+									
+
+
+				
+			display:
+				隐藏功能:
+					display:none
+					其他隐藏功能:
+						visibility: hidden	
+						opacity: 0-1		# 透明度, 为0时隐藏
+						
+				
+				转换块级标签和行内标签:
+					display: block
+						将行内标签的显示特点转换成块标签;
+						可以设置宽高;
+						隔行显示;
+						
+						
+					display: inline
+						将块标签转的显示特点换为行内标签;
+						不能设置宽高;
+						行内显示;
+						
+					display: inline-block
+						行内显示且可以设置宽高;
+					
+
+			
+			margin边距塌陷:
+				两个盒子模型的margin-top和margin-buttom中只取最大值作为盒子间距;
+
+			
+			
+			position定位:
+				
+				主要属性有: 
+					top
+					right
+					bottom
+					left
+				
+				
+				absolute绝对定位:
+					在没有父级或者父级标签没有定位,相对于浏览器左上角定位;
+					父级有定位,不管默认为0, 则相对于父级标签的左上角来定位;
+					
+					特点:
+						脱离文档流;
+						提升层次;
+						
+						
+				relative相当定位:
+					半脱离文档流;
+					盒子相对与物理位置漂移,但是本身物理位置不变,灵魂出窍;
+					
+					
+
+				fixed固定定位:
+					
+			
+			混合定位:
+				一般容器标签是版脱离文档流,即relative定位;
+				
+				在relative定位的容器内容随意使用:
+					脱离文档流形式;
+						float
+						
+						absolute
+							相对与定位的父级标签;
+							
+						display
+					
+					其他形式;
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				

@@ -1,0 +1,89 @@
+１０１条数据
+每页１０条数据
+当前页	ｎ
+
+
+页码		数据
+１		［０：１０］
+２		［１０：２０］
+３		［２０：３０］
+．．．
+９		［８０：９０］
+１０		［９０：１００］
+１１		［１０１］
+
+通过以上的数据计算出总共的页数
+	101/10=10.1
+	
+
+上一页　１　２　３　４　５　６　７ ８　９　１０　１１　下一页
+
+
+目标：
+	根据页码ｎ取出对应页的所有数据
+		例如：ｎ＝１０＞＞　Book.objects.all()［８０：９０］；
+	判断是否存在上一页和下一页
+		ｎ<=1
+			没有上一页
+		
+		n>=total_page
+			没有下一页
+	显示的页码个数	
+		当数据量很大的时候，例如根据计算页数达到１００甚至更多，那么也不能全部显示，怎么办？
+		规定最多显示９个页码：show_page_num=9
+			当计算后的　total_pages　>9时，按照show_page_num为准；
+			若页码total_pages<=９时，那么直接显示即可；
+			
+			
+			# 需要重新组织标签字符串，有点难度，先不采用	
+			
+			'''
+			例如：total_pages＝100，show_page_num＝5
+			
+			上一页　 １　２　３　４　５　... 100 下一页
+			
+			上一页　１　...4　５ 6 7 8 ... 100 　下一页
+			
+			上一页　１　...96　97 98 99 100 　下一页
+			
+			
+			if current_page_num < 5:
+				上一页　 １　２　３　４　５　... 100 下一页
+					
+			elif 5 < current_page_num < total_pages - 4:
+				上一页　１　...4　５ 6 7 8 ... 100 　下一页
+			
+			elif total_pages - 4 <= current_page_num <= total_pages:
+				上一页　１　...96　97 98 99 100 　下一页
+			'''
+			
+			total_pages＝11，show_page_num＝5
+			
+			
+			上一页　 １　２　３　４　５ 下一页
+			
+			上一页　 2　3　4　5　6  下一页
+		
+			half_show_page_num = show_page_num / 2
+			page_start = current_page - half_show_page_num	
+			pager_end = current_page + half_show_page_num　+ 1
+			
+			例如：
+				c_page = 5
+				p_s = 5-2=3
+				p_e = 5+2+1=8
+				
+				7 8 9 10 11
+			
+			
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+

@@ -1,0 +1,311 @@
+
+
+
+字符串str:
+	是什么? 有序的字符集合,用于表示文本信息;
+	
+	方法:
+		功能:
+			count(char)				# 统计出现的次数;
+			endswith(char)			# 检测是否以char字符结尾,返回布尔值;	
+			strip()					# 删除左右侧空格;		
+			lstrip()				# 删除左侧空格
+			rstrip()				# 删除右侧空格
+		
+		
+		join:
+			操作字\元祖\字典(整合key):
+				sep.join(iterable)	# 将可迭代序列进行操作,整合成字符串,中间以sep分隔;
+			
+			
+		查找:
+			find(char,start,end)	# 在指定的区域内查找字符char并返回索引,顺序是从左至右;注意,未找到返回-1	
+			rfind(char)				# 从右至左查询目标字符并返回索引;
+			
+			index(char)				# 同find,按找索引由低至高匹配,但是为匹配到则报错:ValueError
+			rindex(char)			# 按照索引由高至低匹配
+		
+		
+		替换:
+			s.replace(old_str, new_str)
+			
+		
+		显示相关:
+			capitalize()			# 首字母大写
+			lower()					# 转换成小写
+			upper()					# 转换成大写
+		
+		格式化输出:
+			format:
+				print('{}_{}'.format('a', 'b'))  	# 位置映射, 一一对应
+				print('{1}_{0}'.format('a', 'b'))	# 按照索引
+				print('{name}_{age}'.format(name='alex', age=29)) # 按照关键字
+			
+			%:
+				print('%s_%s' % ('alex', 29))
+				%d  # 只匹配整数类型
+				
+			
+			对齐输出:
+				ljsut(width, fillchar)  # 左对齐, 指定宽度和填充字符
+				rjsut(width, fillchar)  # 右对齐
+				center(width, fillchar)  # 字符串居中显示
+		
+		
+		is判断方法:
+			s.isalnum()        # 是否是字母或者数字的组合,返回布尔值
+			s.isalpha()        # 是否是字母组合, 返回布尔值
+			s.isdecimal()      # 是否是十进制数字组合
+			s.isdigit()        # 是否是数字的组合
+			s.istitle()        # 是否首写字母大写
+			s.islower()        # 是否由小写字母组成
+			s.isnumeric()      # 判断是否由数字字母组成
+			s.isupper()        # 是否由小写字母组成
+			s.isspace()        # 是否由空格组成
+		
+		
+		
+		字符串匹配规则,python中是re模块:
+			有什么用? 在一堆字符中找到目标字符串
+			
+			
+			正则语法：
+				.			# 除换行符外的任意字符;
+				*			# 匹配一次或者多次;
+				+			# 匹配零次或者多次;
+				\d			# 0-9;
+				\D			# 非数字;
+				\w			# 字母或数字
+				[...]		# 字符集中的任意一个字符,匹配一个;
+				(ab|ef) 	# 分组, 匹配ab 或者 ef;
+				^			# 匹配字符串开头
+				$			# 匹配字符串结尾
+				？			# 匹配前一个字符０或者１次
+				{m,n}		# 匹配前一个字符ｍ-n次
+				
+					
+			
+			方法:
+				complile: 	
+					预编译, re.complile('\d+')生成pattern对象,再调用其内部的匹配方法;
+					使用: 若匹配规则比较复杂;系统需要多次调用此匹配规则;
+					常规情况下直接使用re模块调用即可;
+					
+					str >>>> sadhiuhuahd826536327wqyeihdyugasud8ywqeiqwheuadt78q
+					pattern >>> '\d+'
+					
+					查找:
+	
+						re.match(pattern, s, flag):
+							以字符串起始位置开始根据规则匹配,若未匹配到字符串,则返回None;
+							取出结果字符串: match_str.group();	
+					
+						search(*args):
+							从左至右逐个进行匹配,且只返回匹配,匹配立即返回;
+							取结果同上;
+						
+						findall(*args):
+							从左至右,匹配至结果,并将匹配的内容以列表形式返回;
+					
+						fullmatch(*args):
+							全匹配;
+						
+					替换:
+						
+						re.sub(pattern, repl, string, count=0)
+							从模板中根据规则匹配出字符串并将其替换;
+							可以指定替换次数;
+						
+						re.split(pattern, string, maxsplit)
+							返回一个列表;
+							将匹配的内容改为逗号分隔字符串;
+						
+						
+					flag参数;
+						以上方法都可以指定flag参数;
+						re.IGNORANCE: 忽略字母大小写进行匹配;
+							
+					匹配电话号码:
+						简单版本: patterns = '1[3578]\d{9}'
+					
+					匹配邮箱:
+						简单版本: patterns = '\w{1,10}@(qq|foxmail|gmail|126|163).com'
+							
+
+列表list
+	是什么? [], 内部元素以 ',' 分割, 按照索引存放各种数据类型;
+
+	后进先出,类似子弹夹
+	
+	方法:
+		init:				构造方法, 传入可迭代对象,返回列表;
+		len(lst): 			内部元素个数;
+		count(item)			统计元素item出现的数量
+		
+		增:
+			append(): 			从列表右侧追加元素;
+			insert(index,item): 在特定位置插入元素;
+			extend(list)		在右侧追加列表,参数可以迭代对象,会自动转换成列表;	
+		
+		删:
+			pop(index): 		删除指定位置的元素,若未指定索引,默认从删除最右侧元素,返回空;
+			remove(item):		从左往右查找并删除匹配的第一个元素item; 
+			clear(): 			清空列表;
+		
+		查:
+			index(item, start_index,end_index)
+								查询目标字符的索引,可以开始和结束的索引位置,
+								若在指定的索引范围内未找到则报错
+								
+		排序:
+			reverse(): 			反序;
+		
+			sort(key=None,
+				reverse=False): 排序,可以指定排序条件,例如key=str.lower(),不区分大写进行排序
+							默认为按照ascii排序
+		
+		浅复制(重点):
+			copy()
+				l = ['f', 1,2,['a', 3]]
+				
+				# 申请容器的内存空间
+				l1 = l.copy()
+				
+				# 此时,l1和l是这两个容器的内存地址是不同的
+				print('l1<%s> l<%s>'% (id(l1), id(l)))
+			
+				# 但是内部元素是共享的,所以如果内部元素是可变元素的话,
+					# 只要此可变元素在其中一个容器中被修改,则其他的容器中此元素也会同步改变;
+				
+				print(l1==l)  # True
+				print(l1 is l)  # False		
+				
+		
+		is 和 ==的区别:
+			is : 比较变量指向的内存地址是否相等;
+			== : 比较两个变量的值是否相等;
+			
+		
+		深复制:
+			import copy
+			l1 = copy.deepcopy(l)
+			
+			# 此时, 容器l1和其内部元素都是新申请内存空间;
+		
+		循环:
+			for i in lst:
+				print(i)
+		
+		
+			
+
+
+字典dict相关:
+
+	是什么? 映射类型结构,键与值用':'分开, 项与项用','分开;
+	格式: {key: value};	
+	不可变数类型的数据可以作为key,value没有限制;
+	
+	增\改:
+		{}.formkeys(seq, value) # 快速新建字典;
+		d[key] = value  		# 存在key则修改, 不存则新增;
+		d.setdefault(key,d_v)	# 存在key,则不修改, 不存在key,则增加{key:d_v};
+		d.update(d1)			# 将字典d1的键值对添加到d中;若key重复则覆盖;
+		
+		
+	删:
+		pop(key)				# 删除键为key的键值对,若没有则抛出Keyerror异常;
+		popitem()				# 随机删除一个键值对, 若字典为空也会抛出Keyerror异常;
+		clear()					# 清空所有;
+		
+			
+	
+	查看:
+		d.items()				# [(k1,v1), (k2,v2),...]
+		d.keys()				# [k1, k2, k3, ...]
+		d.values()				# [v1, v2, ...]
+		d.get(key, default)		# 获取key的值, 若字典中没有匹配的key则返回default值, 默认为None;
+		
+	循环:
+		
+		for k,v in d.items():
+			print(k, v)
+
+		for k in d:
+			print(k, d[k])
+
+		for k, v in enumerate(d):
+			# enumerate循环出索引和对应的键, 可以遍历所有的可迭代集合对象!
+			print(v,d[v])
+		
+	
+	长度: 
+		len(d)
+
+	
+	带索引字典OrderedDict
+		
+		from collections import OrderedDict
+		ord_d = OrderedDict()	
+		# 遍历按照从左至右, popitem()从右至左删除;
+		
+
+	
+元祖tuple:
+	同列表结构类似,左右元括弧,内部元素以逗号分隔;
+	与列表去区别:
+		元素不可变:
+			若内部元素是不可变数据类型,那么是不能重新赋值;
+			若内部元素是数据容器,则可以增加元素;
+	
+	
+	方法:
+		找元素:
+			index(item)			# 确定内部元素的位置索引, 若没有则报错:ValueError;
+		
+		计数:
+			count(item)			# 统计元素item出现的次数;
+		
+		创建元祖:
+			 tuple(seq())
+			 
+			 
+			 
+	namedtuple:
+		特点:
+			1. 本身是一个函数,限定了内部元素的属性名称,返回一个自定制的tuple子类;
+			2. 随后就可以使用属性而非索引调用内部元素;
+		
+		
+		实例:
+			from collections import namedtuple
+
+			MyTuple = namedtuple('asasa', ('x', 'y'))
+
+			t = MyTuple(1, 2)
+			print(t.x)  # 1
+			print(t.y)  # 2
+	
+	
+	deque:
+		双向队列;
+		与list不同的是:
+			从左侧删除元素: popleft()
+			从左侧添加元素: appendleft() 
+		
+	
+	Counter(string):
+		返回字典,key为字符串内部出现的字符,value为对应的出现次数;
+		
+		
+
+set集合:
+	{...};
+	最大的特点是自动清除重复元素;
+		
+	
+
+			 
+
+
+

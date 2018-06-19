@@ -1,0 +1,178 @@
+利用bootstrap框架对所有模板以及对应的视图逻辑进行调整，进一步学习boots框架．
+	header设置
+		
+	缩略框显示（主页面，机构类别，课程列表，教师列表）
+		使用方法：
+		<div class="row">
+		  <div class="col-sm-6 col-md-4">
+		  	
+		  	
+			<div class="thumbnail">
+			  <img src="..." alt="...">
+			  
+			  <div class="caption">
+				<h3>Thumbnail label</h3>
+				<p>...</p>
+				<p><a href="#" class="btn btn-primary" role="button">Button</a> 
+					<a href="#" class="btn btn-default" role="button">Button</a></p>
+			  </div>
+			</div>
+			
+			
+		  </div>
+		</div>
+		
+	图标
+	
+	页码显示
+		利用pure-pagination，自定义分页类还是存在很多弊端；
+		
+		'''
+		from pure_pagination import Paginator,PageNotAnInteger,EmptyPage
+		
+		def func(request):
+			# 获取当前页码数 
+		    try:
+		        page_num = request.GET.get('page', 1)
+		    except PageNotAnInteger:
+		        page_num = 1
+
+		    p = Paginator(all_courses, per_page=6, request=request)
+		    # 此对象包含当前页的对象列表，在前端通过course_page.object_list取出
+		    course_page = p.page(page_num)
+			return render(request, 'course-list.html', locals())
+		'''
+
+		前端页面(利用bootstrap)
+			
+		'''
+		<nav aria-label="Page navigation">
+           <ul class="pagination">
+           
+		      {% load i18n %}
+		        {% if course_page.has_previous %}
+		            {# 有上一页就不显示这个 #}
+		            <li class="long"><a href="?{{ course_page.previous_page_number.querystring }}" >
+		            {% trans "上一页" %}</a></li>
+		        {% endif %}
+
+		        {% for page in course_page.pages %}
+		            {# 循环遍历每一页 #}
+		            {% if page %}
+		                {% ifequal page course_page.number %}
+		                    {# 如果是当前页 #}
+		                    <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+		                {% else %}
+		                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+		                {% endifequal %}
+
+		            {% else %}
+		                <li class="none"><a href="">/static.</a></li>
+
+		            {% endif %}
+		        {% endfor %}
+
+		        {% if course_page.has_next %}
+		            <li class="long"><a href="?{{ course_page.next_page_number.querystring }}" > 
+		            {% trans "下一页" %}</a></li>
+		        {% endif %}
+		        
+          </ul>
+        </nav>
+		'''
+			
+
+
+text-align?
+	
+	属性：
+		ｌｅｆｔ，ｒｉｇｈｔ，ｃｅｎｔｅｒ，ｊｕｓｔｉｆｙ
+	针对标签内的文本显示的位置．
+	块标签内文本：
+		根据宽度和指定的属性来调整位置；
+	
+	内联标签：
+		由于没有宽度，所以文本会紧贴标签，指定属性没有意义；
+		
+	嵌套标签：
+		以内部标签为准！类似与函数作用区域，优先局部作用域．
+		文本位置优先考虑父亲标签的设置规则，若父没有规则再网上查询；
+		
+	
+利用js插件实现用户图片上传以及动态显示？
+	主要是用户中心页面实现难度有点大！
+	
+
+
+
+项目部署，deep系统
+
+nginx
+	端口转发，处理用户请求	
+uwsgi
+
+相关命令：
+	安装nginx： sudo apt-get install nginx
+	查看进程：ps aux|grep nginx
+	ipconfig：取出192.168.0.104 在浏览器输入查看是否能运行nginx
+		'''
+		 flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.0.104  netmask 255.255.255.0  broadcast 192.168.0.255
+        inet6 fe80::bf6b:c90a:7171:b89  prefixlen 64  scopeid 0x20<link>
+        ether 84:3a:4b:64:5f:c6  txqueuelen 1000  (Ethernet)
+        RX packets 92640  bytes 130672060 (124.6 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 68230  bytes 6264262 (5.9 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+		'''
+	
+		
+		
+	
+	
+	
+	
+	
+	
+
+
+
+	
+	
+	
+	
+
+	
+
+
+
+
+	
+	
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+			
+		
+	
+
+
+
+

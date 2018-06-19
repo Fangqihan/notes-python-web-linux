@@ -1,0 +1,329 @@
+是什么?
+	是一个轻量级的js库;
+	封装了很多js的功能;
+
+
+作用:
+	使得js用起来更方法简单快捷;
+	
+	特点:
+		1. 可批量操作:
+			与js不同,在批量操作标签(属性或者绑定事件),需要利用for遍历,逐个绑定事件;
+			jquery可以直接一次性对一类标签进行相关操作;
+				例如:
+					$('p').css({'font-size': '20px'})
+						#  定位所有的p标签,修改其内部以及内部标签中的文本的文字大小;
+		2. 可连续性操作;
+				$('.p1 +')		# 下一个兄弟标签
+				$('.p1 ++++')	# 找接下来的第四个兄弟标签
+		
+		
+		
+		
+导入:
+	同js
+	需要下载js版本
+	<script src='jquery-3.1.1.js'></script>
+	
+
+使用:
+	有自身的语法,不能使用DOM的方法;
+	
+	查:
+		
+		直接查询:
+		
+			$('selector')
+				#id
+			
+				.class_name
+		
+				tagname
+		
+				*					
+		
+		
+		间接查询/导航查询:
+			selector1 匹配出所有的标签组list1;
+			$("selector1 符号 selector2")
+				# 注意selector2只是一个进一步筛选的条件,可以不存在,若不存,就不需要筛选而已;
+				
+			空: 
+				在list1的子孙标签中以selector2取查询标签
+			
+			>:
+				只在子代查询;
+			
+			+:
+				下一个标签查询
+			
+			~:
+				在后面所有兄弟标签;
+		
+		
+		利用:进行内部筛选:
+			$("selector: eq(index)")
+				# 在selector查询的标签列表中定位,根据索引定位目标标签;
+				
+				
+			$("selector: first")
+				# 查询第一个
+				
+			# 查询索引为索引为
+				基数
+				偶数
+				大于某个index
+				小于某个index
+				last
+				非
+
+			
+			针对
+			input标签进行筛选:
+				$(':text').css('border','2px solid red')
+				$(':password').css(...)	
+			
+			取input中的值:
+				$('input').val()
+			
+		
+		外部筛选/ 真正的导航查询:
+			
+			
+			# 后代查询
+			$(selector).children(selector)				
+			
+			
+			# 向下查找兄弟标签
+			$(selector).next()
+			$(selector).nextall()
+			$(selector).nextutil(selector)
+			
+			
+			#向上查找
+			$(selector).prev()
+			... 
+
+			
+			# 查询父标签
+			$(selector).parent()
+			$(selector).parentUtil(selector)
+
+			
+			# 查找所有兄弟标签
+			$(selector).siblings()
+			
+									
+		
+		根据属性查询:
+			$('[class]')
+				# 查找包含class属性的标签
+			
+			$('[class=d1]')
+				# 查找包含属性class='d1'的标签
+				# 注意,class值必须只能为d1,
+			
+			$('[class][id]')
+				# 查找包含class和id属性的标签
+			
+	
+	增:
+		var new_node = '<p>abcd</p>'
+		
+		增加子标签插入:
+		
+			node.append(new_node)
+				# 底部添加子标签
+			
+			node.prepend(new_node)
+				# 从顶端添加子标签
+			
+		
+		增加兄弟标签:
+			
+			node.after(new_node)
+				# 从后面追加兄弟标签
+				
+			node.before(new_node)
+				# 从前面追加兄弟标签
+			
+			# 注意,追加同级标签紧贴自身的;
+			
+
+	
+	删:
+		
+		# 删除class属性中的d2值		
+		$('div').removeclass('d2')
+		
+		# 产出所有的匹配的标签
+		$(selector).remove()		
+			
+		# 删除所有的后代节点
+		$(selector).empty()
+		
+
+	
+	改:
+		修改css样式:
+			$('div').css({'color':'blue', ...})
+		
+		
+		class属性操作:
+			# 添加class属性值
+			$('div').addclass('d2')
+				# class = div	
+		
+		
+		通用属性操作:
+		
+			# 设置属性,多个键值对用字典形式
+			$('p').attr('attr_name', 'attr_value')
+			
+			# 删除属性
+			$('p').removeAttr('attr_name')
+			
+			# 取出含有目标属性的标签	
+			$('p').attr('attr_name')
+			
+		
+		替换:
+			$(selector).replaceWith('<p>阿萨德</p>')
+			
+			
+		复制:
+			全部拷贝;
+			
+		
+
+		
+	取出文本:
+		
+		# 取出文本内容,所有string合并起来
+		$(selector).text()
+		
+		# 赋值文本
+		$(selector).text(line)
+			# 对标签列表中都赋值文本;
+		
+		
+		# 赋值html标签
+		$(selector).html('<h1>阿萨德</h1>')
+			# 同样,也是对标签列表中的标签都赋值标签文本;
+					
+	
+
+each循环:
+	
+	$.each(obj/arr,function(i,j){
+		# 对象为字典类型:
+			i为key
+			j为value
+		
+		# 对象为列表类型:
+			i为索引
+			j为值或者标签
+	})
+
+
+
+绑定事件:
+	在js中,若有一组标签需要绑定一个事件,那么只能利用for遍历,一个个绑定事件
+	而在jquery中,可以一次性同时绑定;
+
+	$(selector).click(function(){
+		代码...
+
+	})
+	
+	
+	但是对后续添加的同类标签没有任何作用;
+		所以说,需要事件委派功能:
+		$(定位父标签).on('事件','委派的子标签',function(){
+			执行代码...	
+			
+		})
+
+
+
+内置的动态效果:
+
+	脱离文档流:	
+		隐藏:
+			$(selector).hide(1000)
+				# 设置隐藏事件,参数为ms
+				
+			$(selector).fadeOut(1000)	
+				# 隐藏过程中下面的标签不会上移,直到完全隐藏,就脱离文档流
+		
+			$(s).sildeUp(1000)
+			
+		显示:
+			$(selector).show(1000)
+		
+			$(selector).fadeIn(2000)
+			
+			$(s).slideDown(1000)
+			
+	
+		显示和隐藏来回切换:
+			$(selector).toggle(1000)
+			
+			$(selector).fadeToggle(2000)
+	
+	
+
+位置偏移:
+
+	相对于body标签的偏移:
+		# 设定标签偏移值, 注意,是半脱离文档流,相当于relative
+		$(selector:eq(0)).offset({left:20,top:20})
+	
+	
+		# 取出偏移量
+		$(selector:eq(0)).offset().left;
+			# 取出左侧偏移量
+	
+		$(selector:eq(0)).offset()
+			# 结果以{left:20,top:30}
+	
+	
+	相对已定位的父标签的偏移:
+		$(selector:eq(0)).position()
+			
+			
+
+
+
+页面滚动事件:
+
+	$(window).scroll(function(){
+		console.log($(window).scrollTop())	
+			# 显示页面滚动的当前值
+	})	
+	
+	
+	if($(window).scrollTop()>50){
+		$('.back).show()
+	}
+	eles{
+		$('.back').hide()	
+	}
+	
+	
+	$('.back').click(function(){
+		$(window).scrollTop(0)
+	})
+
+
+
+补充:
+	使得p标签变得可编辑:
+		<p contenteditable="true" ></p>
+		
+	
+	关闭浏览器自动表单输入检查:
+		<form novalidate>
+
+
+

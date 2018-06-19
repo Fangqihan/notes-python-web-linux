@@ -1,0 +1,267 @@
+
+面向过程编程：
+	流程化，简单化；可扩展性差；　
+
+面向对象编程：object oreinte　programming．复杂度高；可扩展性强；
+	利用类和对象来描述现实世界的所有事物；
+	
+	类：是具有相似属性的对象的抽象模板；
+		属性：用于描述类的特征,是什么，能做什么
+	
+	对象：类的实例化，类模板必须经过实例化才能被调用，赋予行为及特征；
+	
+	方法：
+	
+		静态方法 (@staticmethod)
+			类和对象均可调用;
+			不会自动传参;
+			
+		绑定方法: 可以自动传参
+	
+			类方法（＠classmethod)
+				类绑定;
+				将类自身作为第一参数自动传入;
+			
+			对象的方法(没有装饰器修饰):
+				对象绑定;
+				对象作为第一参数被自动传入;
+				
+				init构造： 
+					
+					实例化类生成对象时候调用;
+					生成对象的namespace,通过obj.__dict__()查看;
+					
+				del析构:
+					实例化对象在内存中被销毁时候调用,可以用
+					del obj来测试;
+					注意:程序运行完毕对象并不会马上被销毁，所以不会调动此方法；
+		
+	
+	实例化过程:
+		1. 建立空对象: d = Dog();
+		2. 对象d调用构造方法,生成命名空间以键值对形式存放对象独有的数据属性;
+	
+	
+	类的继承:
+		继承父类的方法:
+			实例化对象时候,会调用init构造方法, 若当前类命名空间没找到,会进入父类的命名空间查找;
+			注意:类的命名空间在类定义完成后才生成;
+			python支持多继承:
+				若存在多个父类, 则按照顺序从第一个父类开始优先深度查询.
+
+		理解:如果类a是类b,那么可以理解为a继承b;
+	
+	
+	类的派生:
+		子类可以添加新的属性;
+		若重名,直接覆盖父类的属性;
+			对象独有的数据(init中添加):
+			
+				继承并父类的init方法:
+					    def __init__(self, name, age, gender):
+							super().__init__(name, age)
+							self.gender = gender
+							
+				不依赖于继承关系使用其他类的方法:
+				    def __init__(self, name, age, gender):
+						Animal.__init__(self, name, age)  # 必须传入实例化对象self
+						self.gender = gender
+			
+		mro:
+			当前类和其父类的列表;
+			
+		
+	类的组合:
+		类之间可以存在关系:有
+		给对象增加属性,此属性值为一个对象或者对象的集合: p1.Dog=d1,即p1有狗对象d1;
+		可以通过p1.d1获取d1的属性;
+		
+	
+	类的封装:
+		隐藏类的属性,防止在类定义的外部直接获取类内部信息,必须通过函数接口取出相关信息;
+		双下划线+属性名称: __name
+		本质上是在类定义完成后会修改属性名称 : _类名.__name;
+			注意: 此类代指 定义此属性的当前类名称;
+	
+	
+	抽象类:
+		abc模块: abstract bases class:抽象类基类
+		定义抽象父类:
+		
+			import abc
+			class Animal(metaclass=abc.ABCMeta)  #  指定继承抽象基类
+				# 定义抽象方法, 子类必须重载此方法,否则在子类实例化过程中会报错
+				@abc.abstractmethod
+				def run()
+					pass		
+		
+		抽象类不能实例化;
+		继承抽象类的子类必须重载包含装饰器@abc.abstractmethod修饰的方法;		
+	
+	
+	多态:
+		同一种事物存在的多种形态;
+		应用: 同一接口去调用,结果不同;
+			
+		鸭子类型:
+			如果它看起来像,叫声像走起路来像鸭子,那么它就是鸭子;
+			可以定义一个新的类,方法同名,用法相同!
+		
+	
+	内置方法:
+		isinstance(obj, lst)
+			判断对象obj的类或者其父类是否在lst集合中, 返回布尔值;
+		
+		issubclass(cls, lst)
+			判断类cls的父类是否在lst集合中, 返回布尔值
+			
+		反射:
+			只是对 对象的属性进行操作
+			hasattr(obj, 's'): 
+				查看对象obj是否有属性名为s的属性,返回布尔值;
+			
+			getattr(obj, 'run'):		
+				获取对象obj中名为run的属性,若为函数属性,也可以加括号调用
+				若没有直接报错: AttributeError
+			
+			delattr(obj, 'run'):
+				删除对象的属性
+				
+			setattr(obj, 'hometown', '武汉')
+				增加对象的属性
+		
+		item系列方法：
+			功能：将对类的操作变成类似与字典操作；
+			 取对象的属性：
+			 	def __getitem__（self,item):
+					return self.__dict__.get(item)
+				p['name']会调用此方法，
+				
+			修改或新增对象属性：
+				def __setitem__(self,key,value):
+					self.dict[key]=value		
+					
+				p['city'] = 'wuhan'会调用此方法;
+				
+			删除属性:
+				def __delitem__(self, key):
+					del self.__dit__[key]				
+					
+				del p['city']会调用此方法
+			
+		str方法:
+			打印类时候显示字符串;
+			
+		__slots__:
+			取代__dict__;
+			obj.__slots__访问对象的属性名称列表;
+			不能新增属性;		
+			
+			
+		property:
+			使得对象调用方法变得像取数据属性一样,免去了加括号;
+			
+		
+	exec('codes', globals, locals):
+		传入是一段命令的字符串对象;
+		根据当前代码所在的命名空间取执行codes中的内容;
+		可以自定义全局和局部命名空间;
+		
+	
+	元类(type):
+		python里一切皆为对象;
+		类是元类的实例化对象;
+		
+		利用元类创建类:
+			1. 利用exec方法生成局部名称空间, 即为类的名称空间
+				global_ = {}
+				class_dict = {}
+
+				class_body = '''
+				def __init__(self,name,age):
+					self.name = name
+					self.age = age
+		
+				def run(self):
+					print('%s is running'%self.name)
+		
+				'''
+				# 先生成类的名称空间,属性键值对
+				exec(class_body,global_,class_dict)
+				print(class_dict)	
+			
+			2. 利用type(class_name, class_bases, dict)生成类
+		
+		
+		
+		元类来控制类定义和类实例化的过程
+			
+			class Animal(type):
+			
+				def __init__(self, class_name, class_bases, class_dict):
+					'''仅在对象类定义的时候调用一次'''
+					if not str(class_name).istitle():
+						raise NameError('类名必须大写')
+					if '__doc__' not in class_dict or not class_dict.get('__doc__','').strip():
+						raise TypeError('必须对类做相关说明')
+					super().__init__(class_name, class_bases, class_dict)
+
+				def __call__(self, *args, **kwargs):
+					'''实例化过程'''
+					# 1. 建立空对象, 自动传入调用的类
+					obj = object.__new__(self)
+					# 2.  初始化类对象,往类内部填充参数
+					self.__init__(obj, *args, **kwargs)
+					# 3. 返回类对象
+					return obj
+
+
+			# 1. 定义类并指定创建类的元类, 默认为object, 生成类的dict
+			# 2. 此时调用元类的init方法
+			class Dog(metaclass=Animal):
+				"""狗类"""
+				def __init__(self, name, age):
+					self.name = name
+					self.age = age
+
+			# 3. 实例化类的时候会调用元类的call方法
+			d = Dog('pingpang', 2)
+			print(d.__dict__)
+
+		
+		
+		单例模式:
+		
+		class SchoolMeta(type):
+
+			def __init__(self, name, bases, dict):
+				"""仅在定义school类的时候调用一次"""
+				super().__init__(name, bases, dict)
+				# 类的属性,只会生成一次
+				self.instance = None
+				self.instance_num = 0
+
+			def __call__(self, *args, **kwargs):
+				"""school类实例化的时候调用"""
+				if not self.instance:
+				    # 1.第一次调用, 生成空对象
+				    self.instance = object.__new__(self)
+				    # 2.调用类的init函数初始化空对象
+				    self.__init__(self.instance, *args, **kwargs)
+				    
+				return self.instance
+
+		class School(metaclass=SchoolMeta):
+			"""school类,是SchoolMetal这个元类的对象"""
+
+			def __init__(self, name='希望小学', address='英山'):
+				self.name = name
+				self.address = address
+
+		print(School.__dict__)
+		print(SchoolMeta.__dict__)
+		s = School()
+		print(s.__dict__)
+		
+		
+			

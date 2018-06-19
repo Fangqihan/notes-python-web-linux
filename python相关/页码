@@ -1,0 +1,85 @@
+def index(request):
+    """解决分页"""
+    # 1. 取出所有对象
+    user_list = UserInfo.objects.all()
+    # 2. 通过url的传输的参数拿到当前页码
+    current_page = int(request.GET.get('page', 1))
+    # 3. 每页显示10条
+    per_page_count = 10
+    # 4. 推算出当前页码数,每页显示数量和最终筛选条件的关系
+    start = (current_page-1) * per_page_count
+    end = current_page * per_page_count
+    '''
+    例如:
+    	页码		取值范围
+    	1		[0:10]
+    	2		[10:20]
+    	3		[20:30]
+    	n		[(n-1*10):n*10]
+    '''
+
+    # 5. 筛选出当前页数据
+    user_list = user_list[start: end]
+    page_list = []
+
+    # 6. 计算总的页数
+    # 例如,当前每页10条,总数据为301条,则显示为31页
+    total_count = UserInfo.objects.all().count()
+    a, b = divmod(total_count, per_page_count)
+
+	'''
+    301/10=30+1 # 31页
+    300/10=30   # 30页
+	'''
+    
+    if b:
+        total_pages = a + 2  # a+1
+    else:
+        total_pages = a + 1  # a
+
+    # 7. 配置上一页和下一页,
+    if current_page == 1:
+        prev_p = '<li class="disabled"><a href="#">上一页</a></li>'
+    else:
+        prev_p = '<li><a href="?page=%s">上一页</a></li>' \
+                 % (current_page - 1)
+
+    if current_page + 1 == total_pages:
+        next_p = '<li class="disabled"><a href="">下一页</a></li>'
+    else:
+        next_p = '<li><a href="?page=%s">下一页</a></li>' \
+                 % (current_page + 1)
+
+    # 8. 保证显示的页码个数相同[1 2 3 4 5]
+    
+    show_page_num = 5
+    half_show_page_num = int(show_page_num/2)  # 2
+
+    pager_start = current_page - half_show_page_num 
+    pager_end = current_page + half_show_page_num + 1
+
+    # 9. 判断最小页数不能小于1
+    if current_page - show_page_num <= 1:
+        pager_start = 1
+        pager_end = pager_start + show_page_num + 1
+
+    # 10, 最大页数不能大于total_pages
+    if current_page + show_page_num >= total_pages + 1:
+        pager_end = total_pages
+        pager_start = total_pages - show_page_num
+
+    for i in range(pager_start, pager_end):
+        if i == current_page:
+            page_list.append('<li class="active"><a href="?page=%s">'
+                             '%s</a></li>' % (i, i))
+        else:
+            page_list.append('<li><a href="?page=%s">%s</a></li>' % (i, i))
+
+    page_str = '  '.join(page_list)
+    page_str = prev_p + page_str + next_p
+    page_str = safestring.mark_safe(page_str)
+
+    return render(request, 'index.html', {
+        'user_list': user_list,
+        'page_str': page_str,
+    })

@@ -1,0 +1,547 @@
+js概念:
+	一门语言;
+		弱语言:
+			数据类型可以被忽略;
+			
+		
+		解释性语言;
+		
+		
+					
+	
+js作用:
+	操作html的DOM结构:
+		通过js可以获取html页面的标签,进而对标签的属性以及样式操作;
+			
+			DOM:
+				Document Oreinted Model:文档对象模型
+				在js中,一切可被视为皆为节点;	
+	
+	
+				查询节点:
+					直接获取节点:
+
+						document.getElementById('box')		
+	
+						document.getElementByClassName('d1')[0]
+		
+						document.getElementByTagName('div')[0]
+		
+						document.getElementByName('...')[0]  # ...
+	
+	
+	
+					间接获取/导航获取节点
+		
+						先获取中间节点,随后再获取其相邻的节点;
+						# 获取所有子标签，以arr形式作为结果
+						node.children
+		
+						# 首个子标签
+						node.firstElementChild
+		
+						# 最后一个子标签
+						node.lastElementChild
+		
+						# 只能获取上一个或者下一个兄弟标签,若没有则返回null
+						node.nextElementtSibling
+		
+						node.previousElementtSibling
+		
+		
+		
+				修改节点:
+					样式操作/class属性操作
+						主要是增加class的属性,依此来显示对应css的中样式;
+		
+						赋值样式:
+							# 初次创建时属性赋值
+							node.className='a1'
+			
+						新增样式
+							node.classlist.add('class_name');
+				
+						删除样式
+							node.classlist.remove('class_name')
+		
+		
+					其他属性操作:
+						# 设置id属性
+						node.id = 'b1'
+		
+			
+						setAttribute(attr_name, attr_value)
+							# 不仅可以设置内置的id和class属性,还可以自定义样式	
+			
+						getAttribute(attr_name)
+							# 获取属性值,没有对应的属性则返回null
+									
+			
+					文本内容操作
+						node.innertext
+							只取当前节点以及其子孙标签中的所有文本内容;
+		
+						node.innerhtml
+							取当前标签内的所有文本及标签,以string格式输出;
+		
+						node.innerhtml = '<h1>爱仕达所多</h1>'
+							直接将当前节点下的内容全部替换;
+							但是会识别标签格式;
+		
+						node.innertext = '爱仕达所多'
+							替换所有内容;
+							不能识别标签格式;
+		
+		
+					替换节点:	
+						node.replaceChild(old_node,new_node);
+		
+		
+					拷贝节点:
+						node.cloneNode()
+							# 只拷贝父节点,子节点不拷贝
+			
+						node.cloneNode(true)
+							# 全部拷贝
+
+	
+				新增节点:
+					new_node = document.createElement('div');
+					new_node.innerText = 'asdasd';
+		
+					# 在子节点末尾添加
+					node.appendChild(new_node);
+		
+					# 在指定的节点前添加
+					node.inserBefore(new_node,node1)
+		
+
+
+				删除节点:
+		
+					node.removeChild(target_node);
+	
+			
+			
+		基于事件与用户动态交互;
+			理解:
+				用户的一个键盘或者鼠标动作就是一个事件!
+					click		# 单击
+					dbclick		# 双击
+					...
+					
+				
+				怎么使用?
+					与函数结合:
+						1. 需要先定义执行函数;
+															
+						2. html处理事件时候是以 on+事件名 形式;
+							'<button onclick=f()>按钮</button>	
+							# 只要点击按钮就会调用函数f
+				
+					
+					绑定事件方法:
+						1. 直接在标签内绑定,如上
+						2. 在js中绑定:
+							node.on...=function(e){
+								代码体
+							}	
+						
+							
+						
+						常用事件句柄:
+							onclick
+							ondbclick
+							
+							onfocus		# 输入框聚焦开始输入
+							onblur		# 输入框失焦
+							onchange	# 输入框内被修改,且失焦点
+							
+							onkeydown	# 按键按下触发
+							onkeyup		# 按键松开触发
+							
+							onmouseover		# 鼠标移动到区域触发
+							onmourseleave	# 鼠标离开区域时触发
+							
+		
+		常用事件:
+			
+			
+							
+						
+													
+					
+								
+									
+								
+					
+		
+
+语法:
+	
+	变量声明及赋值
+		
+		变量命名规范
+			大小写严格区分;
+			首写字符三选一:
+				字母
+				下划线
+				$
+			
+		
+	数据类型
+		number:
+			包含python中的整形和浮点型数据
+			
+		
+		string:
+			字符串类型
+			
+			方法:
+			
+				# 大小写转换
+					s.touppercase()
+						
+				# 去掉两端空格
+					s.trim()					
+					
+				# 字符串切片:
+					s.substr(start_index, length)
+					s.substring(start_idnex, end_index)
+			
+				# 正则匹配,并取出值;
+					s.match('\\d{2}')[0]:
+					
+					
+				# 查询对应索引的字符
+					s.charAt(index):
+					
+				
+				# 查询对应字符的索引:
+					s.indexof('char')		
+					s.search('char')
+					# 若没有查到则返回-1
+
+				# 替换字符串
+					s.replace(old_str, new_str)			
+				
+				
+			
+		boolean:
+			true
+			false
+			
+		
+		object:
+			
+			array:
+				不能使用typeof 检测;
+				创建方式:
+					1. var arr = new array(1,2,3,4);
+				
+					2. var arr = [1,2,3]
+					
+					
+				方法
+					join(separator)  # 连接成字符串,中间用指定的分隔符隔开
+					
+					tostring()  # 直接转换成string,中间用逗号分割 
+
+					reverse()	# 倒置
+					
+					sort()		# 排序
+					
+					pop()		# 删除最后一个元素
+					
+					shift()		# 删除第一个元素
+					
+					concat(*args)	#  从最右侧增加元素
+						
+			
+			date:
+				
+				创建日期对象:
+					var d = new Date();  # 默认为当前时间
+					d.tolocaldatestring()  # 2018/1/1
+				
+					var d1 = new Date('2018/1/1 11:12')
+				
+				日期对象的方法:
+					获取相关信息:
+
+						年: 	d.getfullyear()
+						月: d.getmonth()
+						日: d.getdate()
+						星期: d.getday()  # 0-6: 周日-周六
+				
+					设置日期:
+						将get换成set即可;
+					
+					
+				
+			math:
+				方法:
+					Math.random()  		# 0-1之间的随机数
+					Math.round(number)	# 四舍五入
+					Math.max(*args)		# 求最大值
+
+		
+		undifined
+			变量没有声明,例如直接type(a)
+		
+		
+		NaN:
+			当将string当做number进行运算时候
+			例如: alert('a'-1)
+		
+		
+		null
+			...
+	
+	
+	
+	运算符号:
+	
+		赋值运算符:
+			+=
+			-=
+			*=
+			/=
+			
+			例如:var x=1,y=2
+			x=x+y >> x+=y
+		
+		
+		算数运算符:
+			
+			+
+			-
+			*
+			/
+			%: 求余数
+			
+			自增:
+				x++:
+					先赋值,再运算;
+					 
+				++x:
+					先运算,再赋值;
+			
+			例如:var x=1,y=2;
+			z = x+y
+			
+		
+		逻辑运算符:
+			与:
+				&&
+			
+			或:
+				||
+			
+			非:
+				!
+			
+			判断条件是否是true或者false;
+			
+		
+				
+		比较运算
+			>
+		
+			<
+		
+			==:
+				转换数据类型后再比较是否相等;
+				例如:'1'==1: true
+		
+			!=
+		
+			===:
+				没有转换数据类型情况下比较;
+				例如: '1'===1:false
+			
+		
+		
+	流程控制:
+	
+		if判断分支:
+			
+			if(判断){
+				代码1
+			}
+			else if(判断){
+				代码2
+			}
+			else{
+				代码3
+			}
+		
+		switch(){
+			
+			case 值1:
+			
+		}		
+		
+		
+			
+		
+		for遍历:
+			
+			1. 方式1:
+				循环遍历arr中的元素;
+				只推荐由number 和 string组成的序列
+					var arr = [1,2,3]
+
+					for(var i in arr){
+						console.log(i,typeof i)
+						# 1 string
+					}
+			
+			
+			2. 方式2:
+				
+				for(var i=0, i<10,i++){
+					console.log(i);
+				}
+			
+			
+		
+		
+		while循环:
+			
+			var i=0;
+			
+			while(var i<100){
+				console.log(i);
+				i++;
+			}
+		
+		
+				
+	异常处理机制:
+		try{
+		
+		}
+		catch(e){
+		
+		}
+		finnally{
+		
+		}
+		
+	
+	
+	函数:
+		
+		基本语法:
+			
+			function f1(){
+				代码...	
+			
+			}
+			
+		
+		作用域:
+			同python的函数作用区域,优先函数内的局部变量,若找不到,再找全局变量;
+			
+			若函数内修改全局变量,则不能加var关键字;
+			
+		
+		函数调用:
+			函数名()
+			
+		
+BOM:
+	是什么?
+		浏览器对象模型,Browser Object Model
+		
+		
+	作用:
+		与浏览器互动
+	
+	
+	对象种类:
+	
+		window:
+			表示当前浏览器对象;
+			
+			方法:
+				alert('msg') 
+					# 信息提示框
+			
+			
+
+				confirm('msg')
+					# 信息确认框
+					# 确定返回True,取消返回False
+				
+				
+				
+				prompt('msg')
+					# 信息输入框
+					# 返回输入的信息
+				
+				
+				# 页面跳转至指定的url地址
+				window.location='https://www.baidu.com
+					
+				
+	
+				# 设定计时器
+				timer = window.setinterval(fun, 2000);
+					# fun为函数,2000为时间间隔,单位ms
+	
+					
+				# 取消计时器
+				window.clearInterval(timer);
+	
+
+
+左侧菜单:
+	
+	点击事件
+		功能代码:
+			点击则显示当前菜单
+			其他菜单隐藏
+		
+	
+	绑定事件:
+		for遍历绑定事件;
+		
+		for(var i=0, i<node_list.length,i++){
+			node_list[i].onclick=function(){
+				功能代码;
+							
+			}
+
+		}
+	
+
+
+this的作用:
+	操作的当前标签;
+
+
+
+事件传播:
+	若作用区域有覆盖,那么应该设置;
+	事件只作用于当前这一层作用区;	
+	
+	例如:
+		如下所示:
+			若节点node1和node2的区域有重叠部分,且node2区域更小,
+			那么在点击重叠部分时候,会触发两次事件;
+		
+		node1.onclick=function(e){
+			代码2	
+			
+		}
+		
+		node2.onclick=function(e){
+			代码1
+			e.stopPropagation()
+			# 设置后只会触发当前事件,会阻止其它事件传播
+		}
+		
+
+
