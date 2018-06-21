@@ -1,0 +1,1277 @@
+目录相关
+
+	创建：
+		mkdir -p ./d1/d2/1.txt  ＃　可以创建多级目录
+	
+	删除：
+		rm -rf d1
+
+
+	移动：
+		mv -r d2 d1
+		一般在移动前最好先备份目录，例如：
+			cp -r d d.bak
+			bak后缀的文件是备份文件，
+
+
+	复制：
+		cp -r d2 d1		
+		-p  ＃　保留文件属性,preserve	
+		-a  ＃　用于实现备份
+		一般用户复制多个文件或目录到一个目录,若是目录需要加上 -r 选项：
+			cp /bin/{zdiff,zegrep,zless} d1
+
+	
+	查询：
+		find -type d -name '*2'  
+			# 在当前目录以及子目录下查询名称以２结尾的目录
+	
+
+	查看：
+	    ls -l   
+	    	查看当前目录下所有的子目录与文件的详细信息，主要内容如下：
+	        第一位：
+	            _：普通文件
+	            d:目录
+	            l：链接文件
+	        第２－１０位：用户权限
+	            属主权限
+	            属组权限
+	            其他用户
+	        
+	        文件大小
+	        
+	        时间戳
+
+	 	cd：进入目录
+	 	
+	 	pwd：查看当前的绝对路径
+
+	 	tree：查看目录树
+
+
+
+文件相关：
+
+	新建：
+		touch f1.txt
+		、
+
+
+	修改：
+		touch -a 1.txt：更新文件的access时间
+		touch -m 1.txt：更新文件的modify时间
+		
+	移动：
+		mv ./d1/1.txt ./d2	
+		移动前最好备份:
+			cp d1/1.txt d1/1.txt.bak
+
+	删除：
+		rm f1.txt		
+		
+
+	复制：
+		cp ./d1/1.txt ./d2
+		若文件名重名，则直接覆盖文件。
+		
+
+	查询：
+		-type d　　＃　表示目录
+		-type f　　＃　表示文件
+		find -type f -name '*.txt'  # 在当前目录以及子目录下查询名称以２结尾的文件
+
+	查看：
+
+		stat：查看文件所有属性
+
+
+
+日期相关：
+	
+	date 【options】【+格式】:
+
+		选项：
+
+			-d  根据给定的时间戳显示时间
+			-s  根据给定的时间戳设定系统时间
+				root@fangqihan-PC:/home/fangqihan/data# date -d '20121210'
+					2012年 12月 10日 星期一 00:00:00 CST
+				root@fangqihan-PC:/home/fangqihan/data# date -d '20121210'
+					2012年 12月 10日 星期一 00:00:00 CST
+
+
+		格式：
+			%s  	显示自1970/1/1到现在经历的秒数
+
+
+	cal:
+		显示日历
+
+
+	clock：
+		系统时间
+
+	hwclock:
+		硬件时间
+
+
+
+漏斗家族：
+	将正确的命令结果输入到文件中：
+		
+		>>	追加重定向，追加到最后一行
+		
+		>	标准重定向，先清空，再写入内容
+			注意，非常危险，会清空目标文件！
+
+			set -C　	　   开启防止标准重定向功能，无法覆盖已存在的文件
+			set +C 	 	关闭此功能
+
+
+	只将错误的命令结果输入到文件中：
+		2>> 
+
+	不论命令错误与否都输入到文件中：
+		commands >>3.txt 2>>3.txt
+		&>>   
+
+	<	输入重定向
+
+		tr 'a-z' 'A-Z' < 1.txt
+
+	<< 	here document　此处生成文档
+		
+		cat >> 1.txt << EOF  	追加多行
+
+
+
+管道 |
+	将管道前的命令的输出当做后一个命令的输入。
+	
+	echo helloworld | tr 'a-z' 'A-Z'
+	head -10 3.txt | tail 3  ＃　取８－１０行的内容 
+
+	可以连续使用管道！
+
+  	|tee  标准输出且写入到文件
+
+
+
+文件内容相关：
+
+	新增内容：
+
+		vim
+			:wq!	强制退出并保存
+			:q!		强制退出
+			G       跳转到最后一行
+			gg      跳转到第一行
+			i       进入编辑模式
+			o       增加下一空白行并进入编辑模式
+		    esc     退出编辑模式
+		    dd      删除本行
+		    ０      行首
+		    $       行尾
+		    #x      删除光标后的x个字符
+		    ctrl+f  向后翻屏
+		    ctrl+b  向前翻屏
+		    yy      复制当前行
+		    p       粘贴至下一行
+		    P       粘贴只上一行
+		    u       撤销前一次编辑操作
+		    ctrl+r  撤销最近一次的撤销操作
+		
+		echo       
+		         
+			追加一行内容到文件末尾：
+				echo asasas >> file
+
+			清空原文件并写入内容：
+				echo asasas > file
+
+			追加多行内容：
+				cat >> 3.txt << EOF
+				> q
+				> w
+				> e
+				> rt
+				> EOF
+
+			
+	查看内容：
+
+		cat:
+		    一般查看所有内容；
+		    -n ：显示行号
+		    -c  按字节显示，例如-c3显示前三个字节
+		    --help 查看介绍,和ｍａｎ作用类似，但包含中文
+
+		
+		head：
+		    默认查看前１０行内容
+		    -n      显示前ｎ行   
+
+		            	
+		tail：
+		    默认查看后１０行内容
+		    -n      显示最后的ｎ行
+
+		    
+		sed:
+			stream editor，行编辑器
+			默认不编辑原文件，仅对模式空间的数据做处理。
+
+			格式： sed 'AddressCommands' file ...
+
+			-n  静默模式，不在默认显示模式空间中的内容
+			
+			-i  直接修改原文件
+			
+			-e  可以同时执行多个脚本
+
+			-f  保存至文件 /path/to/script 
+				sed -f /path/to/script file  将指定文件中的脚本运行在file上
+
+			-r  表示使用扩展正则表达式
+
+
+			Address:
+				1、Startline、Endline
+					例如： 1,100
+					$$   表示最后一行
+					$-1  倒数第二行
+
+				2、/RegExp/
+					/^root/  表示以root字符串开始的行
+			
+				3、/pattren1/,/pattren2/
+					第一次被pattern1匹配的行开始，到第一次被pattern2匹配到的行结束中间的所有行。
+					sed '/3/d' file   不显示包含3的行
+
+				4、linenumber
+					指定的行
+
+				5、Startline， +N
+					从startline开始，向后的N行
+					sed '1,+3d' file   删除1-4行
+
+
+			Commands:
+				d   删除（不显示）符合条件的行
+					sed 1,2d file  显示除了1-2行的其他行
+
+				p   显示符合条件的行
+					结合 -n 使用，只显示符合条件的行
+					sed -n '/^3p'  
+
+				a  \string : 在指定的行后追加新的行
+
+				i  \string : 在指定的行前面追加新的行
+
+				r file   将指定文件的内容添加至符合条件的行处
+					sed '3r demo1.sh' f1.txt   读取demo1.sh的所有内容，将其放在f1.txt的第三行后面
+
+				w file   将指定文件的内容添加至指定的文件中
+					sed '/a/w f2.txt' f1.txt  将f1.txt中包含字符a的行写入文件f2.txt中   
+
+
+				s/pattren/string/  : 查找并替换，只替换第一次被模式匹配的串。
+					 sed 's/a/A/' f1.txt   将字符a替换为字符A
+					 sed 's/.*a.*/A/' f1.txt    将包含a的行替换字符A
+
+					 -g  全局替换，只要匹配就替换
+					 	 sed 's/a/A/g' f1.txt   替换每行中所有的a为A
+
+					 -i  忽略大小写
+
+					 分隔符可以为 s###. s@@@
+					 	不要使用要替换的字符为分隔符
+
+					 &   引用前面匹配到的字符串：
+					 	sed 's/a/&r/g' f1.txt  在匹配到的a字符后追加r字符
+
+					 	sed 's#l\(..e\)#L\1#g' f1.txt 
+					 		只将以e结尾中间只有两个字符的l替换为L，例
+						 	hello,my love
+							hello, linux
+								>>> 
+							hello,my Love
+							hello, linux
+
+
+
+		awk:
+			内容比较多！
+			显示某一行或多行：
+				awk 'NR==n' 3.txt  ＃显示第ｎ行内容
+				awk "NR==n, NR==m" 3.txt　　＃　显示ｎ－ｍ行的内容   
+
+		
+		grep：
+			 Global Research 根据模式搜索文本并将符合模式的文本行显示出来，部分匹配。
+		     Patterns  由文本字符和正则表达式的元字符组合而成的匹配条件
+
+		     -i  		忽略大小写
+		     --color  	匹配的内容高亮显示
+		     -v 		反向查找
+		     -o 		只显示匹配到的字符串
+
+		     grep 'ab' 1.txt    ＃　查看包含特定字符的所有行
+		     grep -v '2' 1.txt  ＃　列出所有不包含字符２的行
+
+
+		     正则表达式：
+
+		     	.  		匹配任意单个字符
+
+		     	* 		匹配其前面的字符任意次　　
+
+		     	.* 		匹配任意多个任意字符
+
+		     	\?  	匹配前一个字符０或１次
+
+		     		grep 'a\?p' 1.txt 匹配字符串 ap, p
+
+
+		     	\{n, m\}	匹配前面的字符至少n次，之多m次
+
+		     	^  		字符出现在行首
+
+		     	$ 		字符出现再行尾
+
+		     	^$ 		空白行
+
+		     	[]		指定集合内的任意一个字符
+
+		     	[^]		非
+
+		     	[:digit:]　同通配符使用
+
+
+
+		cut：
+			-d：指定分隔符，默认是一个空格
+			-f：指定要显示的字段
+
+				例如：按照空格分割，显示每行的第一个字段
+				fangqihan@fangqihan-PC:~/data$ cat 1.txt
+					1 12 asdasda
+					a 12as asdasdv
+					vc 12as asdasds
+					d 12a asdasdf
+				fangqihan@fangqihan-PC:~/data$ cut -d' ' -f1 1.txt
+					1
+					a
+					vc
+					d
+
+				cut -d' ' -f1,2 1.txt  ＃　显示第一个和第二个字段
+				cut -d' ' -f1-3 1.txt  ＃　显示第１－３个字段
+
+
+
+		sort：
+			查看文件内容并按行排序；
+			默认按照行首个字符在ascii对应的十进制升序排序。
+
+			-n  按照数值大小排序
+			-r  降序
+			-t  指定分隔符
+			-k  指定字段
+				sort -t: -k3 -n /ect/passwd
+			-u  重复行只显示一次
+			-f  不区分大小写
+
+
+
+		uniq:
+			相邻并完全一样的行只显示一次
+		
+			-d  显示重复行，只显示一次
+			-D  显示重复行，有多少显示多少
+			-c  显示重复的行和对应的次数
+
+
+		wc:
+			统计文本内容（行，单词，字节数）
+			fangqihan@fangqihan-PC:~/data$ wc 1.txt
+				10 　  18 　 80 　1.txt
+				行　　单词　字节　
+
+			-l  显示行数
+			-w  显示单词数
+			-c  显示字节数
+			-m  字符数
+			-L  最长的一行包含的字符数
+
+
+		tr :
+			替换字符,其中ac代指集合，而非一个字符串：
+				tr 'ac' 'bd' < file  将文件中的字符ａ替换成字符ｂ
+				tr 'a-z' 'A-Z' < file  将小写换成大写字母
+
+			-d 　删除指定的字符
+				tr -d '1' < file
+
+
+
+其他概念：
+
+	获取最新的linux当前最新的内核版本号：www.kernel.com
+	
+	linux仅提供内核，上层软件以及库一般由GNU组织提供，都是以源代码形式提供，需要处理成可执行文件。
+
+		编译：将源代码转换成可以在对应平台cpu可以执行的二进制代码的过程。
+
+	linux发行版：
+		Redhat(CentOs)\SUSE\Debian(Ubuntu,Mint)
+
+		RedHat：通用格式，32位可以支持64位操作系统，所以编译RedHat都是很古老的版本，适用于许多系统。
+
+		Gentoo：针对当前系统对软件进行现场编译，非常耗时。
+
+		LFS：linux from scratch,自己下载各种上层软件和Lib文件。
+
+	桌面版：
+		提高用户体验，界面漂亮
+
+
+
+bash及其特性：
+	
+	shell
+		GUI: Gnome, KDE, Xface
+
+		CLI: sh, bash, cshell, kshell, 
+
+	进程：程序的副本，谁用都会产生一个进程。进程是程序执行的实例。
+	在进程看来，当前主机只存在内核和当前进程。
+	
+
+	命令行光标跳转：
+		ctrl+a  跳到命令行首
+		ctrl+e  跳到命令行尾　
+		ctrl+u  删除光标至行首
+		ctrl+k  删除光标只行尾
+		ctrl+l  清屏
+
+
+	命令历史history：	
+		用户命令历史会缓存在文件中；
+		-c  清空命令历史
+		-d600  删除第600个命令
+		-d600 10 指定偏移量１０，删除第６００－６１１行命令
+
+		!n 　　打印命令历史第ｎ条记录并显示执行结果
+		!-n  　倒数第ｎ条命令
+		!!	 　执行上一条命令
+		！string   执行命令历史中最近一个以指定字符串开头的命令
+
+
+
+	环境变量：
+		查看：　
+			echo $PATH
+			echo $HISTSIZE
+		
+		PATH  　命令搜索路径
+
+		HISTSIZE  命令历史缓冲区大小
+
+
+	命令自动补全：
+
+		tab自动补全
+		双击tab显示左右
+
+
+	命令别名alias：
+
+		当前进程有效：
+			alias cls=clear
+			alias rm="rm -i"
+
+		永久生效：
+			切换root用户：sudo -i pwd
+			修改/root/.bashrc，增加命名内容
+			source /root/.bashrc，生效文件
+
+		unalias
+			解除别名
+
+
+	命令替换
+		把命令中某个子命令替换为其执行的结果；也可以使用反引号``
+		例１：显示命令结果：
+			echo "the current directory $(pwd)"
+			echo "the current directory `pwd`"
+		例２：　创建以当前日期为名称的文件
+			touch file-$(date +%d).txt
+
+
+	bash支持的引号：
+
+		``  命令替换
+		""	弱引用，可以实现变量替换
+		‘’	强引用，不能完成变量替换
+
+
+	文件名通配globbing：
+
+		*	代表任意长度的任意字符
+		
+		?	代表任意字符，只能代表一个字符
+		
+		[]  匹配指定范围内的任意单个字符
+
+			[:space:]
+			[:punct:]
+			[:lower:]
+			[:upper:]
+			[:alnum:]
+			[:alpha:]
+			查看：man 7 glob
+
+		[^]  匹配指定范围之外的任意单个字符
+
+		$	换行符
+		
+
+			例： ls 3*   匹配以３起始的文件或目录
+				ls [a-zA-Z][0-9]*  首位字母开头第二位数字后面不限的文件或目录
+
+
+
+linux操作系统：
+	
+	硬件
+
+
+	kernel（操作系统）：
+		将硬件的计算能力抽象出来以系统调用的方式交给其他上层软件。
+
+
+	Lib：
+		.so(动态库|共享库)
+		不能独立执行，必须被调用才会被执行。
+
+
+	开发环境：
+		shell等用户软件
+
+
+
+权限相关：
+
+	文件
+
+		r　　可读，使用cat等命令查看文件内容
+		w　　可写，可以编辑或删除
+		x　　可执行，executable，可以在命令提示符下当做命令提交给内核运行
+
+
+	目录
+
+		r　　可以执行ls列出内部所有文件
+		w　　可以再此目录创建文件
+		x　　可以使用cd切换进此目录，可以使用ls -l查看内部文件的详细信息
+
+
+	用户管理：
+
+		useradd
+			useradd tonyblair  直接创建用户，uid和Gid自动生成，若指定组的话，那么组必须提前存在。
+			-u UID	
+			-g GID	基本组
+			-G GID	附加组
+			-c  	指定注释信息
+			-d  	指定家目录，默认　/home/username
+			-s 		指定shell的路径，使用/etc/shell中的某一个shell，
+					查看默认shell :echo $SHELL  
+			-M 		没有指定家目录，无法实现环境设定
+			-m  	允许再/home目录下再创建用户目录
+
+
+		usermod [option] username
+
+			-u 		UID
+				usermod -u 1111 username
+
+			-L 		锁定账号
+			-U 		解锁账号
+			-s  	修改shell
+
+
+
+		userdel [option] USERNAME
+			没有指定选项，用户家目录不会被删除
+
+			-r  同时删除用户的家目录
+
+
+		groupmod -g 3000 username
+			修改gid和组id
+
+
+		passwd [username]
+
+			-l 		锁定账号
+				当前用户不能修改密码
+
+			-u 		解锁账号
+
+
+			当前用户生成密码：
+				[linuxde@localhost ~]$ passwd
+				Changing password for user linuxde. //更改linuxde用户的密码；
+				(current) UNIX password:   //请输入当前密码；
+				New UNIX password:         //请输入新密码；
+				Retype new UNIX password:  //确认新密码；
+				passwd: all authentication tokens updated successfully. //更改成功；
+
+
+			root用户生成密码：
+				[root@localhost ~]# passwd linuxde    //更改或创建linuxde用户的密码；
+				Changing password for user linuxde.
+				New UNIX password:          //请输入新密码；
+				Retype new UNIX password:   //再输入一次；
+				passwd: all authentication tokens updated successfully. //成功；
+
+
+			生成密码后可以重新开启shell测试！
+
+			参考：http://man.linuxde.net/passwd
+
+			从标准输入管道读入新的密码：
+				echo 'fqh666666' | passwd --stdin user1 
+
+
+		id  	显示当前用户的属性
+			
+			显示id号
+				id -u fangqihan
+				id -g fangqihan
+				id -G fangqihan
+
+			显示名称 -n
+				id -u -n fangqihan
+				...
+
+
+		/etc/login.defs　	
+
+
+
+	改变文件属主和属组：
+		只能在root用户下操作
+		
+		chown	
+			改变文件属主
+				chown username file
+
+			修改目录属主，但是不能修改子文件和目录属主；
+
+				-R 		修改子目录和子文件的属主
+
+				-reference=/path/to/somefile　file  
+					修改为和参考文件一样的属主
+
+			可以修改数组
+				chown :usergrp file
+
+			也可以同时修改属组和属主
+				chown username:usergrp file
+
+		chgrp
+			修改属组
+
+			用法同chown			
+
+
+	修改文件权限：
+
+		修改三类用户
+			
+			chmod 八进制　file
+			
+			-R 		修改目录下的所有文件
+
+			注意：7 == 007
+
+
+		修改某类用户
+			
+			u 	属主
+			g 	属组
+			o 	其他用户
+
+			chmod u=rw- file  修改为读写权限
+			改变其他同理
+
+			可以指定多类用户权限：
+
+				chmod g=r,o=r file
+
+
+		修改某类用户的某位权限
+
+			chmod u+x file 		增加file文件属主的ｘ权限
+
+			chmod u-x file		去掉file文件属主的ｘ权限
+
+			chmod u-x，g-x file	  
+
+			chmod a+x 			三类用户都加上ｘ权限
+
+
+		参考其他文件修改权限
+
+			chmod --reference=/path/file file
+
+
+	以数字代表权限：
+		0	000		---		无权限
+		1	001		--x　　　执行
+		2	010		-w-　　　写
+		3	011		-wx　　　写和执行
+		4	100		r--　　　读
+		5	101		r-x　　　读和执行
+		6	110		rw-　　　读写
+		7	111		rwx　　　读写执行
+		例如：775 分别为属主、属组和其他用户的权限。
+
+
+	用户：ＵＩＤ用户标识符，计算机识别
+
+		解析，在数据库中取出对应用户名的id号，用户id信息存储在/etc/passwd文件中
+	用户组：ＧＩＤ用户组表示符，信息存储再/etc/group中
+
+
+
+	用户类别：
+
+		管理员：0标识
+
+		普通用户： 1-65535标识，最多可以存在65535个用户
+
+			系统用户：1-499
+				专门运行后台程序，无需登录系统
+
+			一般用户：500-60000
+
+
+
+	进程的权限取决于发起者的权限，与进程文件本身的权限无关。
+
+
+	ls　/etc/passwd　介绍
+		account 	登录名
+		password	密码
+		UID
+		GID
+		comment		注释
+		HomeDir   　　　　
+		Shell　		默认shell
+
+
+		密码存在 /ect/shadow 中，加密
+		依次为  
+		加密后的密码、最后修改时间，最短使用期限，最长使用期限，警告时间
+		!!:				17703:			0:			99999:			7	:::
+		
+
+
+	加密方法：
+
+		对称加密：加密和解密使用同一个密码
+
+		公钥加密：每个密码都成对出现，一个为私钥(secret key)，一个为公钥（public key）
+
+		单向加密：散列加密，提取数据特征码，MD5
+
+
+
+计算机组件：
+	
+	cpu：
+		运算器
+
+		控制器：读取指令，控制运算器运算和存储器存储结果。
+		
+		寄存器：ｃｐｕ内部的暂时存储空间
+
+	存储器: 
+		RAM
+
+
+	输入设备、输入设备
+
+
+	ｉｏ：硬盘
+
+	input设备：键盘或鼠标，默认从
+
+	output设备：显示器
+
+	总线：
+		地址总线：用于实现内存寻址
+
+		数据总线：传输数据
+
+		控制总线：控制指令
+
+
+
+shell编程
+	解释型语言
+		存储字符串`10`需要２bytes,而存储10 只需要1byte。
+
+
+	变量：
+		内存空间的引用
+		命名规则：
+			只能包含字母、数字、下划线，且不能以数字开头，且不能与系统环境变量重名，否则会覆盖。
+			最好做到见名知意。
+
+
+		变量类型：
+			
+			环境变量：
+				当前shell进程及其子进程；
+				export varname=value
+
+				脚本在执行时会启动一个子shell进程：
+					命令行中启动的脚本会继承当前shell的环境变量；
+					系统自动执行的脚本（非命令行）就需要自我定义各环境变量。
+				
+				pstree查看当前是否存在子shell,exit可以退出当前bash
+
+
+			本地变量：
+				整个bash进程有效；
+				声明和查看：
+					NAME=alex
+					echo $NAME
+						alex
+
+				引用变量：
+					${NAME}
+					echo "there are some ${ANIMAL}s"   注意必须使用双引号
+
+				局部变量：
+					作用域是当前代码块，例如函数内部
+					local varname=value
+
+
+			位置变量：
+				$1 , $2, ...
+				传递参数给脚本：
+
+				例如脚本：
+					#!/bin/bash
+					# demo.sh
+					if [ -e $1 ];then
+					        echo 'ok'
+					else
+					        echo 'no such file'
+					fi
+				在命令行直接 demo.sh file_path, 就会将file传递进去
+
+
+			特殊变量：
+
+				$?	
+					上一个命令执行状态返回值
+					１、执行命令
+					２、取状态返回码：echo $?
+						0 		正确执行
+						1-255	执行错误
+
+				$#  表示参数的个数
+
+				$*	参数列表
+
+				$@  参数列表
+
+				shift  	默认一次踢掉一个参数
+
+
+			命令  &> /dev/null
+				不管命令是否执行成功，都不会输出到屏幕。
+
+
+
+		设置变量：
+			
+			VARNAME=VALUE
+
+			修改变量：
+				root@fangqihan-PC:~# ANIMAL=pig
+				root@fangqihan-PC:~# echo $ANIMAL
+					pig
+				root@fangqihan-PC:~# ANIMAL=$ANIMAL:sheep
+				root@fangqihan-PC:~# echo $ANIMAL
+					pig:sheep
+
+
+				root@fangqihan-PC:~# echo $PATH
+					/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+				root@fangqihan-PC:~# PATH=$PATH:/home/fangqihan/bin/
+				root@fangqihan-PC:~# echo $PATH
+					/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/fangqihan/bin/
+
+
+			引用的变量不会只作为字符串：
+				root@fangqihan-PC:~# a=2
+				root@fangqihan-PC:~# b=3
+				root@fangqihan-PC:~# c=$a+$b
+				root@fangqihan-PC:~# echo $c
+				2+3
+
+
+		撤销变量：
+			unset VARNAME
+
+
+		查看当前shell中的变量
+			set
+
+
+		查看当前shell中的环境变量
+			printenv
+			env
+			export
+
+
+	脚本：
+		
+		命令的堆砌，按照实际需要结合命令流程控制机制实现的源程序。
+		注意编写脚本时候，=前后不要乱加空格。
+
+
+		shebang：魔数
+			#!/bin/bash
+			以#为注释行
+
+
+		创建简单的脚本
+			1、vim first.sh
+			2、首行指定魔数：#!/bin/bash
+			命令...
+			3、让系统知道文件路径
+			修改PATH环境变量/绝对路径
+
+
+		条件判断：
+
+			条件测试类型：
+				整数测试
+				字符测试
+				文件测试
+
+
+		条件测试表达式：
+			只适用于判断表达式结果的大小比较，不能用户判断是否存在。
+
+			[ expression ] 
+				注意，括号前后必须要空格
+					例如：
+					INT1=33
+					INT2=34
+					[ $INT1 -eq $INT2 ]
+
+			[[ expression ]]
+			
+			test expression
+
+
+		整数比较：
+			-eq		等值比较，相等为真
+				a=3
+				b=4
+				[ $a -eq $b ]
+				echo $?
+				1 	结果错误
+
+			-ne 	不等比较，不等为真
+
+			-gt 	测试是否大于某个数
+
+			-lt 	小于
+
+			-ge 	大于或等于
+
+			-le 	小于或等于
+
+
+		命令间的逻辑关系：
+
+			&&
+				第一个条件为false，第二条件不会再执行，最终结果已经确定；
+				若第一条件为true， 第二条件必须得判断；
+				
+				例如脚本：如果用户存在，显示已存在，否则添加用户
+				#!/bin/bash
+				id user1 &>/dev/null  && echo '用户已存在' || useradd user1
+
+				若用户不存在，则添加，否则显示用户已存在信息
+				#!/bin/bash
+				!id user2 && useradd user2 || echo '用户已存在'
+
+			||
+				id user6 || useradd user6
+
+
+		作业练习
+			1、添加三个用户user1,user2,user3，但要先判断用户是否存在，不存在再添加；
+				#!/bin/bash
+				!id user1 &> /dev/null && useradd user1 || echo '用户user1已存'
+				!id user2 &> /dev/null && useradd user2 || echo '用户user2已存'
+				!id user3 &> /dev/null && useradd user3 || echo '用户user3已存'
+			
+			3、最后显示当前系统上共有多少个用户。
+				num=`wc -l /etc/passwd|cut -d' ' -f1`
+				echo "$num users"
+
+			4、给定一个用户
+				若其uid为0，就显示此为管理员
+				否则，就显示其为普通用户；
+				
+				利用逻辑判断：
+					#!/bin/bash
+					USER=user1
+					USER_ID=`id -u $USER`
+					echo $USER_ID
+					[ $USER_ID -eq 0 ] && echo 'admin' || echo 'common user'adasd
+
+
+				利用if控制语句：
+					#!/bin/bash
+					NAME=tony
+					USERID=`id -u $NAME`
+					if [ $USERID -eq 0 ]; then
+						echo "admin"
+					else
+						echo 'common user'
+					fi
+					[root@localhost fangqihan]# 
+
+			5、判断当前系统是否有用户的默认shell为bash。若有，就显示有多多少个这类用户；
+				反之，就显示没有这类用户
+
+				#!/bin/bash
+				grep 'bash$' /etc/passwd
+				RET=$?
+				echo $RET
+				if [ $RET -eq 0 ]; then
+					NUM=`grep 'bash$' /etc/passwd | wc -l`
+					echo "$NUM users"
+				else
+					echo 'no users'
+				fi
+
+			6、给定一个用户，判断其uid和gid是否一样，如果一样，就显示此用户为good guy，反之，显示为
+				bad guy。
+
+				#!/bin/bash
+				USER=user1
+				echo `id -u $USER`
+				echo `id -g $USER`
+				if [ `id -u $USER` -eq `id -g $USER` ]; then
+					echo 'good guy'
+				else
+					echo 'bad guy'
+				fi
+
+			7、给定一个用户，获取其密码警告期限，而后判断用最近一次修改密码时间距今天是否小于警告期限。
+				提示：算数运算的方法 $[$A-$B]
+				若小于，则显示 warning；反之，显示 ok
+
+				思路：
+					当前时间now
+					上次修改的时间last_mod
+					if [now-last_mod -lt warning_days];then
+						echo 'warning'
+					else
+						echo 'ok'	
+
+				参考：
+					#!/bin/bash
+					now=$((`date +%s`/86400)) 
+					echo "now $now"
+					last_mod=`grep 'tony' /etc/shadow |cut -d : -f3`
+					echo "last_mod $last_mod"
+					warning_days=`grep 'tony' /etc/shadow |cut -d : -f6`
+					echo "warning_days $warning_days"
+					if [ $((now-last_mod)) -lt $warning_days ]; then
+						echo 'warning'
+					else
+						echo 'ok'
+					fi
+				、、、
+
+
+		if分支判断：
+
+			单分支：
+				if 判断条件; then
+					statement1
+					statement2
+					...
+				fi
+
+
+			双分支：
+				if 判断条件; then
+					statement1
+					statement2
+					...
+				else
+					statement3
+					statement4
+					...
+				fi
+
+
+			多分支：
+				if 判断条件; then
+					statement1
+					statement2
+					...
+				elif 判断条件; then
+					statement1
+					statement2
+					...
+				elif 判断条件; then
+					statement1
+					statement2
+					...
+				else
+					statement3
+					statement4
+					...
+				fi
+
+
+			实例：
+				#!/bin/bash
+				NAME=user4
+
+				if id $NAME &> /dev/null; then
+					echo "$NAME exist"
+				else
+					useradd NMAE
+					echo "add user $NAME"
+				fi
+
+
+		算数运算
+
+			let 算数运算表达式
+				let C=$A + $B
+
+
+			[算数运算表达式]
+				C=$[$A+$B]
+
+
+			$((算数运算表达式))
+
+
+		文件测试：
+			-e file_path 		测试文件是否存在
+			-f file_path 		测试文件是否是普通文件，
+			-d file_path		测试是否为目录
+			-r file_path		测试当前用户是否对文件有读权限
+			-w file_path 		测试当前用户是否对文件有写权限
+			-x file_path		测试当前用户是否对文件有执行权限
+
+			例如：
+				[ -e /ect/inittab ]  测试文件是否存在
+					
+					[ if -e file ]; then
+						echo 'exist'
+					else
+						echo 'not exist'
+
+
+				[ -x /ect/rc.d/ec.sysinit ]   测试当前用户是有该文件的执行权限
+
+
+
+		测试脚本是否有语法错误：
+			bash -x 脚本 	相当于单步执行
+
+
+
+		定义脚本退出状态码：
+			exit 	退出脚本
+			exit # 
+				若没有明确定义退出状态码，那么，执行最后一条命令的退出码即为脚本的退出状态码。
+
+
+		练习：
+			给定一个文件，若为普通文件，则显示；若是目录，亦显示，否则，显示为无法识别；
+
+			参考：
+				#!/bin/bash
+				FILE=/home/fangqihan/demo11.sh
+				if [ ! -e $FILE ]; then
+				        echo '不存在'
+				        exit 6  # 退出码，执行后可以通过$?查看
+				elif [ -d $FILE ]; then
+				        echo "derectory $FILE"
+				elif [ -e $FILE ]; then
+				        echo "file $FILE"
+				else
+				        echo '无法识别文件'
+				fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
+
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
