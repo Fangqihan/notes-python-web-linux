@@ -6,8 +6,6 @@ js概念:
 		
 		解释性语言;
 		
-		
-					
 	
 js作用:
 	操作html的DOM结构:
@@ -15,11 +13,11 @@ js作用:
 			
 			DOM:
 				Document Oreinted Model:文档对象模型
-				在js中,一切可被视为皆为节点;	
+				在js中,一切可被视为皆为节点；
 	
 	
 				查询节点:
-					直接获取节点:
+					直接获取节点：
 
 						document.getElementById('box')		
 	
